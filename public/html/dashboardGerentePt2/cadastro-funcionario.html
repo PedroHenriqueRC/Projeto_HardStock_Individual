@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./dashboard-gerente.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Cadastro Analista | HardStock</title>
+
+  <style>
+    .alinhamento {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      margin-top: 2%;
+      width: 50%;
+      height: 90%;
+      background-color: white;
+      border-radius: 50px;
+      padding-top: 20px;
+    }
+
+    .campos {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    .antes,
+    .depois {
+      width: 45%;
+    }
+
+    .titulo {
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    label p {
+      font-size: 1rem;
+      margin-bottom: 5px;
+    }
+
+    input{
+      width: 100%;
+      height: 35px;
+      border: none;
+      background-color: transparent;
+      border-bottom: 2px solid black;
+      font-size: 1rem;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+
+    #permissao{
+      text-align: center;
+      background-color: #232739;
+      color: white;
+      font-size: large;
+      padding: 2%;
+      border-radius: 50px;
+      width: auto;
+    }
+
+    #btnCancel,
+    #btnSave {
+      margin-top: 20px;
+      padding: 10px 20px;
+      width: auto;
+      height: auto;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s ease-in-out;
+    }
+
+    #btnCancel {
+      background-color: white;
+      border: 1px solid red;
+      color: red;
+      margin-right: 10px;
+    }
+
+    #btnCancel:hover {
+      background-color: rgb(236, 26, 26);
+      color: white;
+    }
+
+    #btnSave {
+      background-color: rgb(11, 239, 11);
+      border: 1px solid rgb(11, 239, 11);
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.8;
+    }
+  </style>
+
+
+</head>
+
+<body onload="carregarNome()">
+  <label for="sidebar-ativo" class="sideBar-open">
+    <i class="fa-duotone fa-solid fa-bars"></i>
+  </label>
+  <nav id="nav">
+    <div class="link-conteiner">
+      <label for="sidebar-ativo" class="sideBar-close">
+        <i id="close" class="fa-solid fa-xmark"></i>
+      </label>
+      <ul>
+        <li>
+          <p class="logo">
+            <img src="../assets/imgs/HardStock - branco.png" alt="">
+            <span class="nav-item">Hardstock</span>
+          </p>
+        </li>
+        <li>
+          <p style="margin-bottom: 20px;">
+            <span id="nome" class="navItem-nome">
+
+            </span>
+          </p>
+        </li>
+        <li><a href="../dashboardGerentePt2/dashboard_mensal.html">
+            <i class="fa-solid fa-magnifying-glass-chart"></i>
+            <span class="navItem">Mensal</span>
+          </a>
+        </li>
+        <li><a href="../dashboardGerentePt2/dashboard_funcionario.html">
+            <i class="fa-solid fa-user-plus"></i>
+            <span class="navItem">Funcionário</span>
+          </a></li>
+        <div class="sair">
+          <li><a href="https://heathtech.atlassian.net/servicedesk/customer/portal/4" target="_blank">
+              <i class="fa-solid fa-headset"></i>
+              <span class="navItem">Suporte</span>
+            </a></li>
+          <li>
+            <a href="../dashboardGerentePt2/">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              <span class="navItem">Cancelar</span>
+            </a>
+          </li>
+
+        </div>
+      </ul>
+  </nav>
+  </div>
+
+  <div class="alinhamento">
+    <h1>Cadastrar Funcionário</h1>
+    <div class="campos">
+      <div class="antes">
+        <label id="nome">
+          <p>Nome:</p><br>
+          <input id="inputNome" type="text" placeholder="Digite o Nome:"><br>
+        </label>
+        <label id="sobrenome">
+          <p>Sobrenome:</p><br>
+          <input id="inputSobrenome" type="text" placeholder="Digite o Sobrenome:"><br>
+        </label>
+        <label id="telefone">
+          <p>Telefone:</p><br>
+          <input id="inputTelefone" type="text" placeholder="Digite o número de telefone:"><br>
+        </label>
+      </div>
+      <div class="depois">
+        <label>
+          <p>Email:</p><br>
+          <input id="inputEmail" type="text" placeholder="Informe o E-mail:"><br>
+        </label>
+        <label>
+          <p>Senha:</p><br>
+          <input id="inputSenha" type="password" placeholder="Informe a Senha:"><br>
+        </label>
+        <label>
+          <p>Cargo:</p><br>
+          <select name="Cargo" id="permissao">
+            <option value="#" selected disabled>Selecione o Cargo</option>
+            <option value="Analista">Analista</option>
+            <option value="Gerente">Gerente</option>
+          </select>
+          <button id="btnCancel" onclick="cancelar()">Cancelar</button>
+          <button id="btnSave" onclick="salvar()">Salvar</button>
+        </label>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
+
+<script>
+  function cancelar() {
+    window.location = "./dashboard_funcionario.html";
+  }
+
+  function carregarNome() {
+    let text = sessionStorage.NOME_USUARIO;
+    nome.innerHTML = "Olá, " + text;
+  }
+
+  function salvar() {
+    var nome = inputNome.value;
+    var sobrenome = inputSobrenome.value;
+    var telefone = inputTelefone.value;
+    var email = inputEmail.value;
+    var senha = inputSenha.value;
+    var cargo = permissao.value;
+    var empresa = sessionStorage.EMPRESA_USUARIO;
+    var textoFinal = "";
+
+    if (nome.length < 3) {
+      textoFinal += "Preencha o campo nome corretamente com mais de 3 dígitos.\n";
+    }
+    if (sobrenome.length < 2) {
+      textoFinal += "Preencha o campo sobrenome corretamente com mais de 2 dígitos.\n";
+    }
+    if (telefone.length < 9) {
+      textoFinal += "Preencha o campo telefone corretamente com 9 dígitos.\n";
+    }
+    if (email.indexOf('@') === -1 || email.indexOf('.') === -1 || email.length < 6) {
+      textoFinal += "Preencha o campo email corretamente.\n";
+    }
+    if (senha.length < 4) {
+      textoFinal += "Preencha o campo senha corretamente com mais de 4 dígitos.\n";
+    }
+    if (cargo === "#") {
+      textoFinal += "Selecione o cargo corretamente.\n";
+    }
+    if (textoFinal.length > 0) {
+      window.alert(textoFinal);
+    } else {
+      // window.alert("Vamos fazer o fetch?");
+      
+      fetch("/usuarios/cadastrarFuncionario", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+
+        nomeServer: nome,
+        sobrenomeServer: sobrenome,
+        telefoneServer: telefone,
+        emailServer: email,
+        senhaServer: senha,
+        permissaoServer: cargo,
+        empresaServer: empresa,
+      }),
+    })
+      .then(function (resposta) {
+        console.log("resposta: ", resposta);
+
+        if (resposta.ok) {
+
+          alert("Funcionário cadastrado com sucesso!")
+          window.location = "./dashboard_funcionario.html"
+
+        } else { 
+          throw alert("Houve um erro ao tentar realizar o cadastro!");
+        }
+      })
+      .catch(function (resposta) {
+        console.log(`#ERRO: ${resposta}`);
+      });
+
+    }
+  }
+</script>

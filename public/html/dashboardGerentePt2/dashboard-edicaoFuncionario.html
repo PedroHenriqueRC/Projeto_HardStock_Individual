@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./dashboard-gerente.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Dashboard Edição Analista | HardStock</title>
+
+  <style>
+    .alinhamento {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      margin-top: 2%;
+      width: 50%;
+      height: 90%;
+      background-color: white;
+      border-radius: 50px;
+      padding-top: 20px;
+    }
+
+    .campos {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    .antes,
+    .depois {
+      width: 45%;
+    }
+
+    .titulo {
+      margin-bottom: 5px;
+      font-size: 1.2rem;
+    }
+    #nomeCargoFuncionario #pform{
+      width: auto;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      color: #232739;
+    }
+    label {
+      display: block;
+    }
+
+    label #pform {
+      font-size: 1rem;
+      padding: 2px;
+    }
+
+    input {
+      width: 100%;
+      /* height: 35px; */
+      border: none;
+      background-color: transparent;
+      border-bottom: 2px solid black;
+      font-size: 1rem;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+
+    input::placeholder {
+      color: rgb(0, 0, 0);
+      opacity: 1;
+      /* Para garantir que a cor escolhida seja aplicada integralmente */
+    }
+
+    #select1 {
+      text-align: center;
+      background-color: #232739;
+      color: white;
+      font-size: large;
+      padding: 1%;
+      border-radius: 50px;
+      width: auto;
+      margin-bottom: 10px;
+    }
+
+    #select2 {
+      text-align: center;
+      background-color: #232739;
+      color: white;
+      font-size: large;
+      padding: 1%;
+      border-radius: 50px;
+      width: auto;
+      margin-bottom: 10px;
+    }
+
+    #btnCancel,
+    #btnSave {
+      margin-top: 20px;
+      padding: 10px 20px;
+      width: auto;
+      height: auto;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s ease-in-out;
+    }
+
+    #btnCancel {
+      background-color: white;
+      border: 1px solid red;
+      color: red;
+      margin-right: 10px;
+    }
+
+    #btnCancel:hover {
+      background-color: rgb(236, 26, 26);
+      color: white;
+    }
+
+    #btnSave {
+      background-color: rgb(11, 239, 11);
+      border: 1px solid rgb(11, 239, 11);
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.8;
+    }
+
+    span {
+      color: black;
+    }
+  </style>
+
+
+</head>
+
+<body onload="carregarNome()">
+  <nav id="nav">
+    <div class="link-conteiner">
+      <ul>
+        <li>
+          <p class="logo">
+            <img src="../assets/icon/HardStock - branco.png" alt="">
+            <span class="nav-item">Hardstock</span>
+          </p>
+        </li>
+        <li>
+          <p style="margin-bottom: 20px;">
+            <span id="nome" class="navItem-nome">
+
+            </span>
+          </p>
+        </li>
+        <li><a href="../dashboardGerentePt2/dashboard_mensal.html">
+            <i class="fa-solid fa-magnifying-glass-chart"></i>
+            <span class="navItem">Mensal</span>
+          </a>
+        </li>
+        <li><a href="../dashboardGerentePt2/dashboard_funcionario.html">
+            <i class="fa-solid fa-user-plus"></i>
+            <span class="navItem">Funcionário</span>
+          </a></li>
+        <div class="sair">
+          <li><a href="https://heathtech.atlassian.net/servicedesk/customer/portal/4" target="_blank">
+              <i class="fa-solid fa-headset"></i>
+              <span class="navItem">Suporte</span>
+            </a></li>
+          <li>
+            <a href="./dashboard_funcionario.html">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              <span class="navItem">Sair</span>
+            </a>
+          </li>
+
+        </div>
+      </ul>
+  </nav>
+  </div>
+
+  <div class="alinhamento">
+    <h1>Atualizar Funcionário</h1>
+    <label id="nomeCargoFuncionario">
+      <p id="pform">Perfil:&nbsp;<b id="nomeFuncionario"></b> - <b id="cargoFuncionario"></b></p>
+    </label>
+    
+    <div class="campos">
+      <div class="antes" onload="listarInformacoes()">
+        <h3 class="titulo">Como está:</h3>
+        <label id="telefone">
+          <p id="pform">Telefone:</p><br>
+          <input disabled id="telefoneAntes" type="text"><br>
+        </label>
+        <label id="Senha">
+          <p id="pform">Senha:</p><br>
+          <input disabled id="senhaAntes" type="text"><br>
+        </label>
+        <label id="Cargo">
+          <p id="pform">Cargo:</p><br>
+          <input disabled id="cargoAntes" type="text"><br>
+        </label>
+        <label id="Status">
+          <p id="pform">Status:</p><br>
+          <input disabled id="estadoAntes" type="text"><br>
+        </label>
+      </div>
+
+      <div class="depois">
+        <h3 class="titulo">Como irá ficar:</h3>
+        <label>
+          <p id="pform">Telefone:</p><br>
+          <input id="telefoneNovo" type="text" placeholder="Informe seu novo Telefone:"><br>
+        </label>
+        <label>
+          <p id="pform">Senha:</p><br>
+          <input id="senhaNova" type="text" placeholder="Informe sua nova Senha:"><br>
+        </label>
+
+        <label>
+          <p id="pform">Cargo:</p><br>
+          <select name="Cargo" id="select1">
+            <option value="#" selected disabled>Selecione o Cargo</option>
+            <option value="Analista">Analista</option>
+            <option value="Gerente">Gerente</option>
+          </select>
+        </label>
+
+        <label>
+          <p id="pform">Status:</p><br>
+          <select name="Cargo" id="select2">
+            <option value="#" selected disabled>Selecione o Status</option>
+            <option value="Ativo">Ativo</option>
+            <option value="Desativado">Desativado</option>
+          </select>
+          <button id="btnCancel" onclick="cancelar()">Cancelar</button>
+          <button id="btnSave" onclick="editar()">Salvar</button>
+        </label>
+      </div>
+    </div>
+  </div>
+
+
+
+</body>
+
+</html>
+<script>
+  function cancelar() {
+    window.location = "./dashboard_funcionario.html"
+  }
+
+  function carregarNome() {
+    let text = sessionStorage.NOME_USUARIO;
+    nome.innerHTML = "Olá, " + text;
+  }
+
+  function listarInformacoes() {
+    var idFuncionario = sessionStorage.ID_EDITANDO;
+    console.log("ID do Funcionário:", idFuncionario);
+
+    if (!idFuncionario) {
+      console.error("ID do funcionário não está definido.");
+      return;
+    }
+
+    console.log("Iniciando fetch para obter informações do funcionário...");
+    fetch(`/usuarios/listarFuncionario/${idFuncionario}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(funcionario => {
+        console.log("Dados do Funcionário:", funcionario);
+        if (funcionario) {
+          document.getElementById('cargoFuncionario').innerText = funcionario[0].permissao;
+          document.getElementById('nomeFuncionario').innerText = funcionario[0].nome;
+          document.getElementById('telefoneAntes').value = funcionario[0].numeroTelefone || "(não definido)";
+          document.getElementById('senhaAntes').value = funcionario[0].senha || "(não definido)";
+          document.getElementById('cargoAntes').value = funcionario[0].permissao || "(não definido)";
+          document.getElementById('estadoAntes').value = funcionario[0].estado || "(não definido)";
+          document.getElementById('telefoneNovo').value = funcionario[0].numeroTelefone || "(não definido)";
+          document.getElementById('senhaNova').value = funcionario[0].senha || "(não definido)";
+          document.getElementById('select1').value = funcionario[0].permissao || "(não definido)";
+          document.getElementById('select2').value = funcionario[0].estado || "(não definido)";
+        } else {
+          console.log('Funcionário não encontrado.');
+        }
+      })
+      .catch(error => {
+        console.error('Houve um erro ao capturar os dados dos Funcionarios!', error);
+      });
+  }
+
+  function editar() {
+    var novoTelefone = telefoneNovo.value;
+    var novaSenha = senhaNova.value;
+    var novoCargo = select1.value;
+    var novoEstado = select2.value;
+    var textoFinal = "";
+
+    if (novoTelefone.length < 9) {
+      textoFinal += "Preencha o campo telefone corretamente com 9 dígitos.\n";
+    }
+    if (novaSenha.length < 4) {
+      textoFinal += "Preencha o campo senha corretamente com mais de 4 dígitos.\n";
+    }
+    if (novoCargo == "#") {
+      textoFinal += "Selecione cargo corretamente.\n";
+    }
+    if (novoEstado == "#") {
+      textoFinal += "Selecione Status corretamente.\n";
+    }
+
+    if (textoFinal.length > 0) {
+      window.alert(textoFinal);
+    } else {
+      fetch(`/usuarios/editar/${sessionStorage.getItem("ID_EDITANDO")}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          telefone: novoTelefone,
+          senha: novaSenha,
+          permissao: novoCargo,
+          estado: novoEstado
+        })
+      }).then(function (resposta) {
+
+        if (resposta.ok) {
+          window.alert("Perfil atualizado com sucesso pelo usuario de email: " + sessionStorage.getItem("EMAIL_USUARIO") + "!");
+          window.location = "./dashboard_funcionario.html"
+        } else if (resposta.status == 404) {
+          window.alert("Deu 404!");
+        } else {
+          throw ("Houve um erro ao tentar Editar! Código da resposta: " + resposta.status);
+        }
+      }).catch(function (resposta) {
+        console.log(`#ERRO: ${resposta}`);
+      });
+    }
+  }
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+    carregarNome();
+    listarInformacoes();
+  });
+</script>

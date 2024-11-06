@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ptbr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HardStock | Login</title>
+    <link rel="stylesheet" href='../css/style.css'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,200..1000&display=swap"
+        rel="stylesheet">
+</head>
+</head>
+
+<body>
+    <div class="content">
+        <div class="background">
+            <img class="img" src="../assets/imgs/HardStock - branco.png" alt="Logo Marca">
+            <img class="img2" src="../assets/imgs/HardStock(Preto).png" alt="Logo Marca">
+        </div>
+        <div class="contentItens">
+            <h3>SEJA BEM VINDO!</h3>
+            <h1>Insira seus dados para continuar:</h1>
+            <div>
+                <label for="input_nome">
+                    <span>Email</span>
+                    <input type="text" id="input_email">
+                    <p id="alertEmail"></p>
+                </label>
+                <label for="input_email">
+                    <span>Senha</span>
+                    <input type="text" id="input_senha">
+                    <p id="alertSenha"></p>
+                </label>
+                <div class="ctBtn">
+                    <button id="btn-cancelar" class="btn" onclick="verificar('cancelar')">Cancelar</button>
+                    <button id="btn-proximo" onclick="verificar('login')" class="btn">Login</button>
+                        
+                </div>
+                
+            </div>
+        </div>
+</body>
+
+</html>
+<script>
+
+    function verificar (value){
+
+       if(value == 'login'){
+        let email = document.getElementById('input_email').value;
+        let senha = document.getElementById('input_senha').value;
+
+        if (email.indexOf('@') === -1 || email.indexOf('.') === -1){
+            alertEmail.innerHTML = "Preencha o email corretamente!"
+        setTimeout(() => {
+            alertEmail.innerHTML = ""
+        }, 2000)
+        } else if (email.length < 6 || email == null){
+            alertEmail.innerHTML = "Insira um email válido!"
+            setTimeout(() => {
+                alertEmail.innerHTML = ""
+            }, 2000)
+        } else if (senha == ""){
+            alertSenha.innerHTML = "Preencha o campo senha!"
+            setTimeout(() => {
+                alertSenha.innerHTML = ""
+            }, 2000);
+        } else if (senha.length < 4 ){
+            alertSenha.innerHTML = "Insira uma senha válida"
+            setTimeout(() => {
+                alertSenha.innerHTML = ""
+            }, 2000)
+        } else {
+            cadastro(email, senha)
+        }
+       } else if (value == 'cancelar'){
+           if(confirm("Você deseja realmente sair?")){
+               window.location = "../index.html"
+           }
+       } else {
+        alert("ERRO de requisição!")
+       }
+    }
+
+    function cadastro(email,senha) {
+
+        fetch("/usuarios/autenticar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                emailServer: email,
+                senhaServer: senha
+            })
+        }).then(function (resposta) {
+            console.log("ESTOU NO THEN DO entrar()!")
+
+            if (resposta.ok) {
+                console.log(resposta);
+
+                resposta.json().then(json => {
+                    console.log(json);
+                    console.log(JSON.stringify(json));
+                    sessionStorage.ID_USUARIO = json.id;
+                    sessionStorage.NOME_USUARIO = json.nome;
+                    sessionStorage.EMAIL_USUARIO = json.email;
+                    sessionStorage.EMPRESA_USUARIO = json.fkEmpresa;
+                    sessionStorage.PERMISSAO_USUARIO = json.permissao;
+                    permissao = sessionStorage.PERMISSAO_USUARIO;
+                    
+                   if( permissao == 'Hardstock'){
+                    setTimeout(function () {
+                        window.location = "../html/dashboardHardStock/dashboard_empresa.html";
+                    }, 1000);
+                   } else if (permissao == 'Gerente'){
+                    setTimeout(function () {
+                        window.location = "../html/dashboardGerentePt2/dashboard_mensal.html";
+                    }, 1000);
+                   } else if (permissao == 'Analista'){
+                    setTimeout(function () {
+                        window.location = "../html/dashboardAnalista/dashboard_tempoAnalista.html   ";
+                    }, 1000); 
+                   } else {
+                    alert("Houve um erro ao tentar realizar o login!");
+                   }
+
+                });
+
+            } else {
+
+                console.log("Houve um erro ao tentar realizar o login!");
+                alert("Houve um erro ao tentar realizar o login!");
+
+                resposta.text().then(texto => {
+                    console.error(texto);
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        })
+
+        return false;
+    }
+
+</script>
