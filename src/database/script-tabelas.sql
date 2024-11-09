@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS Empresa (
     fkRepresentante INT DEFAULT NULL,
     razaoSocial VARCHAR(256),
     cnpj CHAR(14),
+	estado varchar(45) default "Ativo",
     emailCorporativo VARCHAR(256),
     FOREIGN KEY (fkRepresentante) REFERENCES Funcionario(idFuncionario)
 );
@@ -288,8 +289,9 @@ select*from VizEdit where idFuncionario=1;
 
 
 
-insert into funcionario(nome,sobrenome,numeroTelefone,email,senha,permissao) values ('Pedro','Henrique',962752952,'pedrohenrique@techsolutions','123456789','Analista');
+insert into funcionario(nome,sobrenome,numeroTelefone,email,senha,permissao) values ('Pedro','Henrique',962752952,'pedrohenrique@techsolutions.com','123456789','Analista');
 
 SELECT * FROM funcionario;
 
-update funcionario set numeroTelefone = 11111111, senha = 11111111, permissao = 'Gerente' where idFuncionario = 4;
+
+update funcionario set permissao = 'Gerente' where idFuncionario = 5;

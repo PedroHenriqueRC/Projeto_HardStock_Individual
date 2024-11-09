@@ -12,7 +12,6 @@
   <title>Dashboard Visualização Analista | HardStock</title>
 
   <style>
-    
     .alinhamento {
       display: flex;
       flex-direction: column;
@@ -59,7 +58,7 @@
     }
 
     #tabelaAnalista {
-      margin-top:2%;
+      margin-top: 2%;
       padding: 2%;
       width: 100%;
       background-color: #f9f9f9;
@@ -196,68 +195,70 @@
     <h1>Funcionários</h1>
     <button id="add"><a href="cadastro-funcionario.html">Novo Funcionário <i id="icone"
           class="fa-solid fa-plus"></i></a></button>
-          <div id="tabelaAnalista">
-            <table id="tabelaAnalista-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Nome</th>
-                  <th>Email</th>
-                  <th>Status</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
+    <div id="tabelaAnalista">
+      <table id="tabelaAnalista-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Cargo</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
 
-              </tbody>
-            </table>
-          </div>
-          
-</div>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
 </body>
 
 </html>
 <script>
 
-var fkEmpresa = sessionStorage.EMPRESA_USUARIO;
+  var fkEmpresa = sessionStorage.EMPRESA_USUARIO;
 
   function carregarNome() {
     let text = sessionStorage.NOME_USUARIO;
     nome.innerHTML = "Olá, " + text;
   }
-  
-  document.addEventListener('DOMContentLoaded', function () {
-  
-  fetch(`/usuarios/buscarFuncionario/${fkEmpresa}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      const tbody = document.querySelector('#tabelaAnalista-table tbody');
-      tbody.innerHTML = '';
 
-      if (data.length === 0) {
-        const row = document.createElement('tr');
-        const cell = document.createElement('td');
-        cell.colSpan = 4; // Ajuste o colspan para 4, pois temos 4 colunas
-        cell.textContent = 'Nenhum Analista vinculado.';
-        row.appendChild(cell);
-        tbody.appendChild(row);
-      } else {
-        data.forEach(funcionario => {
+  document.addEventListener('DOMContentLoaded', function () {
+
+    fetch(`/usuarios/buscarFuncionario/${fkEmpresa}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        const tbody = document.querySelector('#tabelaAnalista-table tbody');
+        tbody.innerHTML = '';
+
+        if (data.length === 0) {
           const row = document.createElement('tr');
-          row.innerHTML = `
+          const cell = document.createElement('td');
+          cell.colSpan = 4; // Ajuste o colspan para 4, pois temos 4 colunas
+          cell.textContent = 'Nenhum Analista vinculado.';
+          row.appendChild(cell);
+          tbody.appendChild(row);
+        } else {
+          data.forEach(funcionario => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
             <td>${funcionario.idFuncionario}</td>
             <td>${funcionario.nome} ${funcionario.sobrenome}</td>
             <td>${funcionario.email}</td>
+            <td>${funcionario.permissao}</td>
             <td>${funcionario.estado}</td>
             <td class="edits">
               <button class="icon-btn edit-btn" onclick="editar(${funcionario.idFuncionario})">
@@ -268,49 +269,54 @@ var fkEmpresa = sessionStorage.EMPRESA_USUARIO;
               </button>
             </td>
           `;
-          tbody.appendChild(row);
-        });
-      }
-    })
-    .catch(error => {
-      console.error('Houve um erro ao capturar os dados dos Funcionarios!', error);
-    });
-});
+            tbody.appendChild(row);
+            
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Houve um erro ao capturar os dados dos Funcionarios!', error);
+      });
+  });
 
 
 
-function editar(idFuncionario) {
-  sessionStorage.ID_EDITANDO = idFuncionario;
-  console.log("Cliquei em editar - " + idFuncionario)
-  window.alert("Você será redirecionado à página de edição Funcionário de id: " + idFuncionario)
-  window.location.href = `dashboard-edicaoFuncionario.html`;
-}
+  function editar(idFuncionario) {
+    sessionStorage.ID_EDITANDO = idFuncionario;
+    console.log("Cliquei em editar - " + idFuncionario)
+    window.alert("Você será redirecionado à página de edição Funcionário de id: " + idFuncionario)
+    window.location.href = `dashboard-edicaoFuncionario.html`;
+  }
 
 
 
-function deletar(idFuncionario) {
-        console.log("Criar função de apagar post escolhido - ID" + idFuncionario);
-        fetch(`/usuarios/deletar/${idFuncionario}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(function (resposta) {
+  function deletar(idFuncionario) {
+    if (funcionario.estado == "Desativado") {
+      window.alert("Funcionário já está Desativado!");
+    } else {
+      console.log("Criar função de apagar post escolhido - ID" + idFuncionario);
+      fetch(`/usuarios/deletar/${idFuncionario}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(function (resposta) {
 
-            if (resposta.ok) {
-                window.alert("Funcionário Desativado com sucesso pelo usuário de email: " + sessionStorage.getItem("EMAIL_USUARIO") + "!");
-                location.reload()
-            } else if (resposta.status == 404) {
-                window.alert("Deu 404!");
-            } else if (resposta.status == 500) {
-                window.alert("Não é possível excluir esse Funcionário pois ele está vinculado à uma empresa.");
-            } else {
-                throw ("Houve um erro ao tentar excluir! Código da resposta: " + resposta.status);
-                window.alert("Houve um erro ao tentar excluir! Código da resposta: " + resposta.status);
-            }
-        }).catch(function (resposta) {
-            console.log(`#ERRO: ${resposta}`);
-        });
+        if (resposta.ok) {
+          window.alert("Funcionário Desativado com sucesso pelo usuário de email: " + sessionStorage.getItem("EMAIL_USUARIO") + "!");
+          location.reload()
+        } else if (resposta.status == 404) {
+          window.alert("Deu 404!");
+        } else if (resposta.status == 500) {
+          window.alert("Não é possível excluir esse Funcionário pois ele está vinculado à uma empresa.");
+        } else {
+          throw ("Houve um erro ao tentar excluir! Código da resposta: " + resposta.status);
+          window.alert("Houve um erro ao tentar excluir! Código da resposta: " + resposta.status);
+        }
+      }).catch(function (resposta) {
+        console.log(`#ERRO: ${resposta}`);
+      });
     }
+  }
 
 </script>
