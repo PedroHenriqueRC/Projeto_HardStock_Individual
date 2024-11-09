@@ -30,7 +30,7 @@
                 </label>
                 <label for="input_email">
                     <span>Senha</span>
-                    <input type="text" id="input_senha">
+                    <input type="password" id="input_senha">
                     <p id="alertSenha"></p>
                 </label>
                 <div class="ctBtn">
@@ -109,21 +109,25 @@
                     sessionStorage.EMAIL_USUARIO = json.email;
                     sessionStorage.EMPRESA_USUARIO = json.fkEmpresa;
                     sessionStorage.PERMISSAO_USUARIO = json.permissao;
+                    sessionStorage.STATUS_PERFIL = json.status;
+                    status = sessionStorage.STATUS_PERFIL;
                     permissao = sessionStorage.PERMISSAO_USUARIO;
                     
-                   if( permissao == 'Hardstock'){
+                   if( permissao == 'Hardstock' & status == 'Ativo'){
                     setTimeout(function () {
                         window.location = "../html/dashboardHardStock/dashboard_empresa.html";
                     }, 1000);
-                   } else if (permissao == 'Gerente'){
+                   } else if (permissao == 'Gerente' & status == 'Ativo'){
                     setTimeout(function () {
                         window.location = "../html/dashboardGerentePt2/dashboard_mensal.html";
                     }, 1000);
-                   } else if (permissao == 'Analista'){
+                   } else if (permissao == 'Analista' & status == 'Ativo'){
                     setTimeout(function () {
                         window.location = "../html/dashboardAnalista/dashboard_tempoAnalista.html   ";
                     }, 1000); 
-                   } else {
+                   } else if(status == 'Desativado'){
+                    alert("Não foi possível fazer login, sua conta foi desativada!")
+                   }else {
                     alert("Houve um erro ao tentar realizar o login!");
                    }
 

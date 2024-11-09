@@ -40,13 +40,15 @@
       margin-bottom: 5px;
       font-size: 1.2rem;
     }
-    #nomeCargoFuncionario #pform{
+
+    #nomeCargoFuncionario #pform {
       width: auto;
       display: flex;
       align-items: center;
       font-weight: bold;
       color: #232739;
     }
+
     label {
       display: block;
     }
@@ -57,7 +59,7 @@
     }
 
     input {
-      width: 100%;
+      width: 90%;
       /* height: 35px; */
       border: none;
       background-color: transparent;
@@ -131,6 +133,16 @@
     span {
       color: black;
     }
+
+    .toggle-password {
+      position: absolute;
+      top: 56%;
+      margin: -2%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 1.2em;
+      color: #232739;
+    }
   </style>
 
 
@@ -184,7 +196,7 @@
     <label id="nomeCargoFuncionario">
       <p id="pform">Perfil:&nbsp;<b id="nomeFuncionario"></b> - <b id="cargoFuncionario"></b></p>
     </label>
-    
+
     <div class="campos">
       <div class="antes" onload="listarInformacoes()">
         <h3 class="titulo">Como está:</h3>
@@ -210,11 +222,14 @@
         <h3 class="titulo">Como irá ficar:</h3>
         <label>
           <p id="pform">Telefone:</p><br>
-          <input id="telefoneNovo" type="text" placeholder="Informe seu novo Telefone:"><br>
+          <input id="telefoneNovo" type="tel" maxlength="15" onkeyup="handlePhone(event)"
+            placeholder="Informe o novo Telefone:"><br>
         </label>
         <label>
           <p id="pform">Senha:</p><br>
-          <input id="senhaNova" type="text" placeholder="Informe sua nova Senha:"><br>
+          <input id="senhaNova" type="text" placeholder="Informe a nova Senha:">
+          <i class="fa-solid fa-eye toggle-password" onclick="togglePassword()" id="toggleIcon"></i>
+          <br>
         </label>
 
         <label>
@@ -246,13 +261,38 @@
 
 </html>
 <script>
-  function cancelar() {
-    window.location = "./dashboard_funcionario.html"
+    function togglePassword() {
+    const passwordInput = document.getElementById("senhaNova");
+    const toggleIcon = document.getElementById("toggleIcon");
+
+    // Alterna o tipo entre "password" e "text"
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      toggleIcon.classList.remove("fa-eye");
+      toggleIcon.classList.add("fa-eye-slash"); // Ícone de olho com linha para "ocultar"
+    } else {
+      passwordInput.type = "password";
+      toggleIcon.classList.remove("fa-eye-slash");
+      toggleIcon.classList.add("fa-eye"); // Ícone de olho aberto para "visualizar"
+    }
   }
 
   function carregarNome() {
     let text = sessionStorage.NOME_USUARIO;
     nome.innerHTML = "Olá, " + text;
+  }
+
+  const handlePhone = (event) => {
+    let input = event.target
+    input.value = phoneMask(input.value)
+  }
+
+  const phoneMask = (value) => {
+    if (!value) return ""
+    value = value.replace(/\D/g, '')
+    value = value.replace(/(\d{2})(\d)/, "($1) $2")
+    value = value.replace(/(\d)(\d{4})$/, "$1-$2")
+    return value
   }
 
   function listarInformacoes() {
@@ -299,6 +339,12 @@
       });
   }
 
+  function cancelar(){
+    if(confirm("Você deseja realmente sair?")){
+      window.location = "./dashboard_funcionario.html"
+    }
+  }
+
   function editar() {
     var novoTelefone = telefoneNovo.value;
     var novaSenha = senhaNova.value;
@@ -306,8 +352,8 @@
     var novoEstado = select2.value;
     var textoFinal = "";
 
-    if (novoTelefone.length < 9) {
-      textoFinal += "Preencha o campo telefone corretamente com 9 dígitos.\n";
+    if (novoTelefone.length < 15) {
+      textoFinal += "Preencha o campo telefone corretamente com 11 dígitos.\n";
     }
     if (novaSenha.length < 4) {
       textoFinal += "Preencha o campo senha corretamente com mais de 4 dígitos.\n";

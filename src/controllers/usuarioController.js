@@ -25,6 +25,7 @@ function autenticar(req, res) {
                             email: resultadoAutenticar[0].email,
                             permissao: resultadoAutenticar[0].permissao,
                             fkEmpresa: resultadoAutenticar[0].fkEmpresa,
+                            status:  resultadoAutenticar[0].estado
                         });
 
                     } else if (resultadoAutenticar.length == 0) {

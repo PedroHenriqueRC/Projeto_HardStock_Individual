@@ -29,7 +29,31 @@ function buscarMedidasEmTempoReal(idAquario) {
     return database.executar(instrucaoSql);
 }
 
+function buscarMediasMensais(periodo) {
+
+    var instrucaoSql = `SELECT 
+    c.nome AS componente,
+    DATE_FORMAT(cp.data_hora, '%Y-%m') AS mes_ano,
+    AVG(cp.valor) AS media_valor
+FROM 
+    Capturas cp
+JOIN 
+    Componentes c ON cp.fkComponente = c.idComponente
+WHERE 
+    cp.data_hora >= DATE_SUB(CURDATE(), INTERVAL ${periodo} MONTH)
+GROUP BY 
+    c.nome, 
+    DATE_FORMAT(cp.data_hora, '%Y-%m')
+ORDER BY 
+    c.nome, mes_ano;
+`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
+    buscarMediasMensais,
     buscarUltimasMedidas,
     buscarMedidasEmTempoReal
 }

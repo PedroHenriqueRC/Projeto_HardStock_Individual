@@ -11,59 +11,104 @@
   <title>Dashboard Mensal | HardStock</title>
 
   <style>
-    .centralizador {
-      display: flex;
-      justify-content: center;
+
+    /* Enhanced Dropdown styling */
+  #selecTempo {
+    position: absolute;
+    margin-left: -49%;
+    /* margin-top: 16%; */
+
+    background-color: #ffffff;
+    color: rgb(35, 39, 57);
+    font-size: 1rem;
+    padding: 0.6% 1.4%;
+    border: none;
+    border-radius: 20px;
+    margin-top: 7.5%;
+    margin-bottom: 3%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  #selecTempo:hover {
+    background-color: #e6e6e6;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Panel-style layout for the charts */
+  .graficos {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 3% 1% 3% 7%;
+    padding-left: 10px;
+    padding: 20px;
+    background: linear-gradient(to bottom, #515a83, #232739, #191b27);
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Chart row styles */
+  .graficos1,
+  .graficos2,
+  .grafico3 {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-between; */
+    width: 100%;
+    margin-bottom: 10px;
+    margin: 0.5%;
+  }
+
+  /* Chart box styling with a more refined panel look */
+  .chart-container {
+    width: 100%;
+    max-width: 550px;
+    background-color: #f8f9fb;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 3%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .chart-container:hover {
+    box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+
+  /* Chart titles with improved font style */
+  .chart-container b {
+    font-size: 1.1rem;
+    color: #4a5568;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+
+  /* Responsive design adjustments */
+  @media (max-width: 768px) {
+    .graficos1,
+    .graficos2,
+    .grafico3 {
       flex-direction: column;
-      align-content: center;
       align-items: center;
-      width: 100%;
-      margin-top: 10%;
-    }
-
-    body{
-      background: white;
-    }
-
-    #selecTempo {
-      text-align: center;
-      background-color: #232739;
-      color: white;
-      font-size: large;
-      padding: 0.5%;
-      border-radius: 50px;
-      width: 15%;
-    }
-
-    .graficos {
-      margin-top: 2%;
-      width: 65%;
-      background: rgba(199, 208, 216, 1);
-      border-radius: 95px;
-      box-shadow: 0px 0px 5px 5px rgb(121, 121, 121);
-      /* padding: 1%; */
-    }
-
-    .graficos1 {
-      display: flex;
-      flex-direction: initial;
-      width: 100%;
-      padding: 2.5%;
-    }
-
-    .graficos2 {
-      display: flex;
-      flex-direction: initial;
-      width: 100%;
-      padding: 2.5%;
     }
 
     .chart-container {
-      width: 100%;
-      margin: 20px auto;
-      align-items: center;
-
+      width: 90%;
+      margin-bottom: 20px;
     }
+  }
+</style>
+
+  </style>
+</head>
+
+
   </style>
 
 </head>
@@ -104,8 +149,7 @@
           <span class="navItem">Funcionário</span>
         </a></li>
         <div class="sair">
-          <li><a href="https://heathtech.atlassian.net/servicedesk/customer/portal/4
-" target="_blank">
+          <li><a href="https://heathtech.atlassian.net/servicedesk/customer/portal/4" target="_blank">
               <i class="fa-solid fa-headset"></i>
               <span class="navItem">Suporte</span>
             </a></li>
@@ -121,42 +165,42 @@
   </nav>
   </div>
 
-  <div class="centralizador">
-
-    <select name="tempo" id="selecTempo">
-      <option value="#" selected disabled> Selecione o Tempo</option>
-      <option onselect="gerar1()" value="1"> 1 mês</option>
-      <option onselect="gerar1()" value="3"> 3 meses</option>
-      <option onselect="gerar1()" value="6"> 6 meses</option>
-      <option onselect="gerar1()" value="12"> 12 meses</option>
-    </select>
-
+  <select name="tempo" id="selecTempo" onchange="gerarGraficosMediasMensais()">
+    <option value="#" selected disabled>Selecione o Tempo</option>
+    <option value="1">1 mês</option>
+    <option value="3">3 meses</option>
+    <option value="6">6 meses</option>
+    <option value="12">12 meses</option>
+  </select>
 
     <div class="graficos">
-      <div class="graficos1">
-
+      <div class="grafico3">
         <div class="chart-container">
-          <b>Média CPU</b>
-          <canvas id="cpuChart"></canvas>
+          <b>Média Rede</b>
+          <canvas id="chart_Rede"></canvas>
+        </div>
+      </div>
+      <div class="graficos1">
+        <div class="chart-container">
+          <b>Média Uso CPU</b>
+          <canvas id="chart_CPU_Uso"></canvas>
         </div>
         <div class="chart-container">
           <b>Média RAM</b>
-          <canvas id="ramChart"></canvas>
+          <canvas id="chart_Memória_RAM"></canvas>
         </div>
       </div>
       <div class="graficos2">
         <div class="chart-container">
-          <b>Média Rede</b>
-          <canvas id="networkChart"></canvas>
+          <b>Média Armazenamento</b>
+          <canvas id="chart_Armazenamento"></canvas>
         </div>
-
         <div class="chart-container">
-          <b>Média Disco</b>
-          <canvas id="diskChart"></canvas>
+          <b>Média Uso Disco</b>
+          <canvas id="chart_Uso_Disco"></canvas>
         </div>
       </div>
     </div>
-  </div>
 
 </body>
 </html>
@@ -165,80 +209,153 @@
 
 
 <script>
-  const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-
-  const cpuData = [40, 45, 50, 55, 60, 65, 70, 75, 68, 64, 58, 52];
-  const ramData = [50, 55, 60, 62, 65, 67, 70, 72, 68, 66, 63, 58];
-  const networkData = [200, 210, 220, 230, 240, 250, 260, 255, 245, 235, 225, 215];
-  const diskData = [60, 62, 65, 67, 70, 72, 75, 77, 73, 70, 68, 64];
-
-  function createChart(ctx, label, data, color, textColor) {
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: months,
-        datasets: [{
-          label: label,
-          data: data,
-          borderColor: color,
-          fill: false,
-          tension: 0.1
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true,
-            labels: {
-              color: 'rgb(0, 0, 0)',
-            }
+  let chartComponents = {}; // Armazena os gráficos de cada componente
+  
+  // Função para buscar dados de médias mensais e atualizar gráficos
+  function gerarGraficosMediasMensais(){
+    var periodo = selecTempo.value;
+      fetch(`/medidas/buscarMediasMensais/${periodo}`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json"
           }
-        },
-        scales: {
-          x: {
-            grid: {
-              color: 'rgb(0, 0, 0)',
-              display: false
-            },
-            ticks: {
-              color: 'rgb(0, 0, 0)',
-            }
-          },
-          y: {
-            beginAtZero: true,
-            grid: {
-              // borderDash: [8, 4],
-              color: 'rgba(0, 0, 0, 0.1)',/////
-            },
-            title: {
-              display: true,
-              text: 'Uso (%) ou Mbps',
-              color: 'rgb(0, 0, 0)',
-            },
-            ticks: {
-              color: 'rgb(0, 0, 0)',
-            },
+      }).then(function (resposta) {
+          if (resposta.ok) {
+              resposta.json().then(json => {
+                  // Organizar dados por componente
+                  const dadosComponentes = {};
+                  json.forEach(item => {
+                      if (!dadosComponentes[item.componente]) {
+                          dadosComponentes[item.componente] = { 
+                              labels: [], 
+                              data: [] 
+                          };
+                      }
+                      dadosComponentes[item.componente].labels.push(item.mes_ano);
+                      dadosComponentes[item.componente].data.push(item.media_valor);
+                  });
+
+                  // Atualizar gráficos para CPU, Memória e Armazenamento
+                  ["CPU Uso", "Memória RAM", "Armazenamento", "Uso Disco"].forEach(componente => {
+                      if (dadosComponentes[componente]) {
+                          atualizarGrafico(componente, dadosComponentes[componente].labels, dadosComponentes[componente].data);
+                      }
+                  });
+
+                  // Atualizar gráfico de rede com upload e download juntos
+                  if (dadosComponentes["Rede Upload"] && dadosComponentes["Rede Download"]) {
+                      atualizarGraficoRede(
+                          dadosComponentes["Rede Upload"].labels, 
+                          dadosComponentes["Rede Upload"].data, 
+                          dadosComponentes["Rede Download"].data
+                      );
+                  }
+              });
+          } else {
+              console.log("Erro ao buscar dados de médias mensais.");
+              resposta.text().then(texto => console.error(texto));
           }
-        }
+      }).catch(function (erro) {
+          console.log("Erro na requisição:", erro);
+      });
+  }
+
+  // Função para criar ou atualizar o gráfico de um componente
+  function atualizarGrafico(componente, labels, data) {
+      const canvasId = `chart_${componente.replace(" ", "_")}`; // ID único para cada canvas
+      let ctx = document.getElementById(canvasId).getContext('2d');
+
+      if (chartComponents[componente]) {
+          chartComponents[componente].destroy(); // Destroi o gráfico existente
       }
-    });
+
+      // Cria um gráfico de linha
+      chartComponents[componente] = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: labels, // Mês/Ano
+              datasets: [{
+                  label: `Média de ${componente}`,
+                  data: data,
+                  borderColor: 'rgb(35, 39, 57)',
+                  backgroundColor: 'rgba(35, 39, 57, 0.2)',
+                  fill: true,
+                  borderWidth: 2,
+                  tension: 0.1 // Suaviza a linha
+              }]
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  tooltip: {
+                      callbacks: {
+                          label: function(context) {
+                              return `${context.raw.toFixed(2)}`; // Valor com duas casas decimais
+                          }
+                      }
+                  }
+              }
+          }
+      });
   }
 
-  const cpuCtx = document.getElementById('cpuChart').getContext('2d');
-  createChart(cpuCtx, 'Média de Uso de CPU (%)', cpuData, 'red', 'black');
+  // Função para criar ou atualizar o gráfico de rede com upload e download
+  function atualizarGraficoRede(labels, dataUpload, dataDownload) {
+      const canvasId = "chart_Rede"; // ID do canvas para o gráfico de Rede
+      let ctx = document.getElementById(canvasId).getContext('2d');
 
-  const ramCtx = document.getElementById('ramChart').getContext('2d');
-  createChart(ramCtx, 'Média de Uso de RAM (%)', ramData, 'blue', 'black');
+      if (chartComponents["Rede"]) {
+          chartComponents["Rede"].destroy(); // Destroi o gráfico existente de Rede
+      }
 
-  const networkCtx = document.getElementById('networkChart').getContext('2d');
-  createChart(networkCtx, 'Média de Uso de Rede (Mbps)', networkData, 'green', 'black');
-
-  const diskCtx = document.getElementById('diskChart').getContext('2d');
-  createChart(diskCtx, 'Média de Uso de Disco (%)', diskData, 'grey', 'black');
-
-  function carregarNome(){
-    let text = sessionStorage.NOME_USUARIO;
-    nome.innerHTML = "Olá, " + text;
+      // Cria um gráfico de linha para upload e download
+      chartComponents["Rede"] = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: labels, // Mês/Ano
+              datasets: [
+                  {
+                      label: 'Média de Upload',
+                      data: dataUpload,
+                      borderColor: 'rgba(54, 162, 235, 1)',
+                      backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                      fill: true,
+                      borderWidth: 2,
+                      tension: 0.1 // Suaviza a linha
+                  },
+                  {
+                      label: 'Média de Download',
+                      data: dataDownload,
+                      borderColor: 'rgba(255, 99, 132, 1)',
+                      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                      fill: true,
+                      borderWidth: 2,
+                      tension: 0.1 // Suaviza a linha
+                  }
+              ]
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  tooltip: {
+                      callbacks: {
+                          label: function(context) {
+                              return `${context.raw.toFixed(2)}`; // Valor com duas casas decimais
+                          }
+                      }
+                  }
+              }
+          }
+      });
   }
+
+  // Função para iniciar a atualização periódica
+  function iniciarAtualizacaoGraficos() {
+      gerarGraficosMediasMensais();
+      setInterval(gerarGraficosMediasMensais, 60000); // Atualiza a cada 1 minuto
+  }
+
+  // Chama a função para iniciar a atualização assim que a página carregar
+  window.onload = iniciarAtualizacaoGraficos;
 </script>
+

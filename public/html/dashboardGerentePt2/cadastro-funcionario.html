@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
     integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>Cadastro Analista | HardStock</title>
 
   <style>
@@ -51,8 +54,8 @@
       margin-bottom: 5px;
     }
 
-    input{
-      width: 100%;
+    input {
+      width: 90%;
       height: 35px;
       border: none;
       background-color: transparent;
@@ -62,7 +65,7 @@
       margin-bottom: 10px;
     }
 
-    #permissao{
+    #permissao {
       text-align: center;
       background-color: #232739;
       color: white;
@@ -103,6 +106,16 @@
 
     button:hover {
       opacity: 0.8;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 56%;
+      margin: -2%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 1.2em;
+      color: #232739;
     }
   </style>
 
@@ -172,7 +185,8 @@
         </label>
         <label id="telefone">
           <p>Telefone:</p><br>
-          <input id="inputTelefone" type="text" placeholder="Digite o número de telefone:"><br>
+          <input id="inputTelefone" type="tel" maxlength="15" onkeyup="handlePhone(event)"
+            placeholder="Digite o número de telefone:"><br>
         </label>
       </div>
       <div class="depois">
@@ -182,7 +196,9 @@
         </label>
         <label>
           <p>Senha:</p><br>
-          <input id="inputSenha" type="password" placeholder="Informe a Senha:"><br>
+          <input id="inputSenha" type="password" placeholder="Informe a Senha:">
+          <i class="fa-solid fa-eye toggle-password" onclick="togglePassword()" id="toggleIcon"></i>
+          <br>
         </label>
         <label>
           <p>Cargo:</p><br>
@@ -203,10 +219,41 @@
 </html>
 
 <script>
-  function cancelar() {
-    window.location = "./dashboard_funcionario.html";
+
+  function togglePassword() {
+    const passwordInput = document.getElementById("inputSenha");
+    const toggleIcon = document.getElementById("toggleIcon");
+
+    // Alterna o tipo entre "password" e "text"
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      toggleIcon.classList.remove("fa-eye");
+      toggleIcon.classList.add("fa-eye-slash"); // Ícone de olho com linha para "ocultar"
+    } else {
+      passwordInput.type = "password";
+      toggleIcon.classList.remove("fa-eye-slash");
+      toggleIcon.classList.add("fa-eye"); // Ícone de olho aberto para "visualizar"
+    }
   }
 
+  const handlePhone = (event) => {
+    let input = event.target
+    input.value = phoneMask(input.value)
+  }
+
+  const phoneMask = (value) => {
+    if (!value) return ""
+    value = value.replace(/\D/g, '')
+    value = value.replace(/(\d{2})(\d)/, "($1) $2")
+    value = value.replace(/(\d)(\d{4})$/, "$1-$2")
+    return value
+  }
+
+  function cancelar() {
+    if (confirm("Você deseja realmente sair?")) {
+      window.location = "./dashboard_funcionario.html"
+    }
+  }
   function carregarNome() {
     let text = sessionStorage.NOME_USUARIO;
     nome.innerHTML = "Olá, " + text;
@@ -244,38 +291,38 @@
       window.alert(textoFinal);
     } else {
       // window.alert("Vamos fazer o fetch?");
-      
+
       fetch("/usuarios/cadastrarFuncionario", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
 
-        nomeServer: nome,
-        sobrenomeServer: sobrenome,
-        telefoneServer: telefone,
-        emailServer: email,
-        senhaServer: senha,
-        permissaoServer: cargo,
-        empresaServer: empresa,
-      }),
-    })
-      .then(function (resposta) {
-        console.log("resposta: ", resposta);
-
-        if (resposta.ok) {
-
-          alert("Funcionário cadastrado com sucesso!")
-          window.location = "./dashboard_funcionario.html"
-
-        } else { 
-          throw alert("Houve um erro ao tentar realizar o cadastro!");
-        }
+          nomeServer: nome,
+          sobrenomeServer: sobrenome,
+          telefoneServer: telefone,
+          emailServer: email,
+          senhaServer: senha,
+          permissaoServer: cargo,
+          empresaServer: empresa,
+        }),
       })
-      .catch(function (resposta) {
-        console.log(`#ERRO: ${resposta}`);
-      });
+        .then(function (resposta) {
+          console.log("resposta: ", resposta);
+
+          if (resposta.ok) {
+
+            alert("Funcionário cadastrado com sucesso!")
+            window.location = "./dashboard_funcionario.html"
+
+          } else {
+            throw alert("Houve um erro ao tentar realizar o cadastro!");
+          }
+        })
+        .catch(function (resposta) {
+          console.log(`#ERRO: ${resposta}`);
+        });
 
     }
   }
