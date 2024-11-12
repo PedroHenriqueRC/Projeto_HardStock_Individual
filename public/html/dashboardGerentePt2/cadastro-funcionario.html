@@ -34,8 +34,8 @@
       padding: 20px;
     }
 
-    .antes,
-    .depois {
+    .coluna1,
+    .coluna2 {
       width: 45%;
     }
 
@@ -174,7 +174,7 @@
   <div class="alinhamento">
     <h1>Cadastrar Funcionário</h1>
     <div class="campos">
-      <div class="antes">
+      <div class="coluna1">
         <label id="nome">
           <p>Nome:</p><br>
           <input id="inputNome" type="text" placeholder="Digite o Nome:"><br>
@@ -189,7 +189,7 @@
             placeholder="Digite o número de telefone:"><br>
         </label>
       </div>
-      <div class="depois">
+      <div class="coluna2">
         <label>
           <p>Email:</p><br>
           <input id="inputEmail" type="text" placeholder="Informe o E-mail:"><br>
@@ -207,8 +207,8 @@
             <option value="Analista">Analista</option>
             <option value="Gerente">Gerente</option>
           </select>
-          </label>
-          <label>
+        </label>
+        <label>
           <button id="btnCancel" onclick="cancelar()">Cancelar</button>
           <button id="btnSave" onclick="salvar()">Salvar</button>
         </label>
@@ -226,15 +226,15 @@
     const passwordInput = document.getElementById("inputSenha");
     const toggleIcon = document.getElementById("toggleIcon");
 
-    // Alterna o tipo entre "password" e "text"
+    
     if (passwordInput.type === "password") {
       passwordInput.type = "text";
       toggleIcon.classList.remove("fa-eye");
-      toggleIcon.classList.add("fa-eye-slash"); // Ícone de olho com linha para "ocultar"
+      toggleIcon.classList.add("fa-eye-slash"); 
     } else {
       passwordInput.type = "password";
       toggleIcon.classList.remove("fa-eye-slash");
-      toggleIcon.classList.add("fa-eye"); // Ícone de olho aberto para "visualizar"
+      toggleIcon.classList.add("fa-eye"); 
     }
   }
 
@@ -292,7 +292,7 @@
     if (textoFinal.length > 0) {
       window.alert(textoFinal);
     } else {
-      // window.alert("Vamos fazer o fetch?");
+      
 
       fetch("/usuarios/cadastrarFuncionario", {
         method: "POST",

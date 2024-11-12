@@ -1,5 +1,4 @@
 var usuarioModel = require("../models/usuarioModel");
-// var aquarioModel = require("../models/aquarioModel");
 
 function autenticar(req, res) {
     var email = req.body.emailServer;
@@ -14,7 +13,7 @@ function autenticar(req, res) {
             .then(
                 function (resultadoAutenticar) {
                     console.log(`\nResultados encontrados: ${resultadoAutenticar.length}`);
-                    console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`); // transforma JSON em String
+                    console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`); 
 
                     if (resultadoAutenticar.length == 1) {
                         console.log(resultadoAutenticar);
@@ -46,14 +45,11 @@ function autenticar(req, res) {
 }
 
 function cadastrar(req, res) {
-    // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
     var nome = req.body.nomeServer;
     var cnpj = req.body.cnpjServer
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
-    // var fkEmpresa = req.body.idEmpresaVincularServer;
 
-    // Faça as validações dos valores
     if (nome == undefined) {
         res.status(400).send("Seu nome está undefined!");
     } else if (cnpj == undefined) {
@@ -64,7 +60,7 @@ function cadastrar(req, res) {
         res.status(400).send("Sua senha está undefined!");
     } else {
 
-        // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
+        
         usuarioModel.cadastrar(nome, cnpj, email, senha)
             .then(
                 function (resultado) {
@@ -84,7 +80,7 @@ function cadastrar(req, res) {
 }
 
 function cadastrarFuncionario(req, res) {
-    // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
+    
     var nome = req.body.nomeServer
     var sobrenome = req.body.sobrenomeServer
     var telefone = req.body.telefoneServer
@@ -92,9 +88,9 @@ function cadastrarFuncionario(req, res) {
     var senha = req.body.senhaServer;
     var permissao = req.body.permissaoServer;
     var empresa = req.body.empresaServer;
-    // var fkEmpresa = req.body.idEmpresaVincularServer;
+    
 
-    // Faça as validações dos valores
+    
     if (nome == undefined) {
         res.status(400).send("Seu nome está undefined!");
     } else if (sobrenome == undefined) {
@@ -110,7 +106,7 @@ function cadastrarFuncionario(req, res) {
     } else if (empresa == undefined) {
         res.status(400).send("Sua empresa está undefined!");
     } else {
-        // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
+        
         usuarioModel.cadastrarFuncionario(nome, sobrenome, telefone, email, senha, permissao, empresa)
             .then(
                 function (resultado) {
@@ -173,14 +169,17 @@ function listarFuncionario(req, res) {
 }
 
 function editar(req, res) {
-    var novoTelefone = req.body.telefone;
-    var novaSenha = req.body.senha;
-    var novaPermissao = req.body.permissao;
-    var novoEstado = req.body.estado;
+    var nome = req.body.nome;
+    var sobrenome = req.body.sobrenome;
+    var telefone = req.body.telefone;
+    var email = req.body.email;
+    var senha = req.body.senha;
+    var permissao = req.body.permissao;
+    var estado = req.body.estado;
     var idFuncionario = req.params.idFuncionario;
 
 
-    usuarioModel.editar(novoTelefone, novaSenha, novaPermissao, novoEstado,idFuncionario)
+    usuarioModel.editar(nome,sobrenome,telefone,email,senha,permissao,estado, idFuncionario)
         .then(
             function (resultado) {
                 res.json(resultado);
@@ -215,13 +214,32 @@ function deletar(req, res) {
         );
 }
 
+function verificarStatus(req, res) {
+    var idFuncionario = req.params.idFuncionario;
+
+    usuarioModel.verificarStatus(idFuncionario)
+        .then(
+            function (resultado) {
+                res.json(resultado);
+            }
+        )
+        .catch(
+            function (erro) {
+                console.log(erro);
+                console.log("Houve um erro ao buscar sobre o Funcionario: ", erro.sqlMessage);
+                res.status(500).json(erro.sqlMessage);
+            }
+        );
+}
+
 
 module.exports = {
-    autenticar,
-    cadastrar,
     cadastrarFuncionario,
     buscarFuncionario,
     listarFuncionario,
-    editar,
-    deletar
+    verificarStatus,
+    autenticar,
+    cadastrar,
+    deletar,
+    editar
 }

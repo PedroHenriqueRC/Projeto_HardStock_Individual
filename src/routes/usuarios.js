@@ -32,4 +32,9 @@ router.delete("/deletar/:idFuncionario", function (req, res) {
     usuarioController.deletar(req, res);
 });
 
+
+router.get("/verificarStatus/:idFuncionario", function (req, res) {
+    usuarioController.verificarStatus(req, res);
+});
+
 module.exports = router;

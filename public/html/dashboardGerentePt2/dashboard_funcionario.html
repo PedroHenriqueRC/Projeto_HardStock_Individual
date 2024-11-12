@@ -247,7 +247,7 @@
         if (data.length === 0) {
           const row = document.createElement('tr');
           const cell = document.createElement('td');
-          cell.colSpan = 4; // Ajuste o colspan para 4, pois temos 4 colunas
+          cell.colSpan = 4;
           cell.textContent = 'Nenhum Analista vinculado.';
           row.appendChild(cell);
           tbody.appendChild(row);
@@ -270,7 +270,7 @@
             </td>
           `;
             tbody.appendChild(row);
-            
+
           });
         }
       })
@@ -291,32 +291,48 @@
 
 
   function deletar(idFuncionario) {
-    if (funcionario.estado == "Desativado") {
-      window.alert("Funcionário já está Desativado!");
-    } else {
-      console.log("Criar função de apagar post escolhido - ID" + idFuncionario);
-      fetch(`/usuarios/deletar/${idFuncionario}`, {
-        method: "DELETE",
+    fetch(`/usuarios/verificarStatus/${idFuncionario}`, {
+        method: "GET",
         headers: {
-          "Content-Type": "application/json"
+            "Content-Type": "application/json"
         }
-      }).then(function (resposta) {
-
-        if (resposta.ok) {
-          window.alert("Funcionário Desativado com sucesso pelo usuário de email: " + sessionStorage.getItem("EMAIL_USUARIO") + "!");
-          location.reload()
-        } else if (resposta.status == 404) {
-          window.alert("Deu 404!");
-        } else if (resposta.status == 500) {
-          window.alert("Não é possível excluir esse Funcionário pois ele está vinculado à uma empresa.");
+    })
+    .then(res => res.json()) 
+    .then(funcionario => {
+        
+        if (funcionario[0].estado === "Ativo") {
+          console.log("Criar função desativar perfil escolhido - ID " + idFuncionario);
+          
+          fetch(`/usuarios/deletar/${idFuncionario}`, {
+              method: "DELETE",
+              headers: {
+                  "Content-Type": "application/json"
+              }
+          })
+          .then(resposta => {
+              if (resposta.ok) {
+                  window.alert("Funcionário desativado com sucesso pelo usuário de email: " + sessionStorage.getItem("EMAIL_USUARIO") + "!");
+                  location.reload();
+              } else if (resposta.status === 404) {
+                  window.alert("Deu 404!");
+              } else if (resposta.status === 500) {
+                  window.alert("Não é possível excluir esse Funcionário pois ele está vinculado a uma empresa.");
+              } else {
+                  throw new Error("Houve um erro ao tentar excluir! Código da resposta: " + resposta.status);
+              }
+          })
+          .catch(error => {
+              console.log(`#ERRO: ${error}`);
+          });
         } else {
-          throw ("Houve um erro ao tentar excluir! Código da resposta: " + resposta.status);
-          window.alert("Houve um erro ao tentar excluir! Código da resposta: " + resposta.status);
+          window.alert("Funcionário já está Desativado!");
+
         }
-      }).catch(function (resposta) {
-        console.log(`#ERRO: ${resposta}`);
-      });
-    }
-  }
+    })
+    .catch(error => {
+        console.log(`#ERRO: ${error}`);
+    });
+}
+
 
 </script>
