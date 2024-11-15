@@ -11,118 +11,119 @@
   <title>Dashboard Mensal | HardStock</title>
 
   <style>
-
     /* Enhanced Dropdown styling */
-  #selecTempo {
-    position: absolute;
-    margin-left: 6%;
-    /* margin-top: 16%; */
-    color: rgb(35, 39, 57);
-    font-size: 1rem;
-    padding: 0.6% 1.4%;
-    border: none;
-    border-radius: 20px;
-    margin-top: 1.5%;
-    margin-bottom: -29%;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  }
+    #selecTempo {
+      position: absolute;
+      margin-left: 6%;
+      /* margin-top: 16%; */
+      color: rgb(35, 39, 57);
+      font-size: 1rem;
+      padding: 0.6% 1.4%;
+      border: none;
+      border-radius: 20px;
+      margin-top: 1.5%;
+      margin-bottom: -29%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
 
-  #selecTempo:hover {
-    background-color: #e6e6e6;
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
-  }
+    #selecTempo:hover {
+      background-color: #e6e6e6;
+      box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+    }
 
-  /* Panel-style layout for the charts */
-  .graficos {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 90%;
-    max-width: 1200px;
-    margin: 3% 1% 3% 7%;
-    padding-left: 10px;
-    padding: 20px;
-    background: linear-gradient(to bottom, #515a83, #232739, #191b27);
-    border-radius: 15px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  }
-
-  /* Chart row styles */
-  .graficos1{
-    display: flex;
-    flex-direction: row;
-    /* justify-content: space-between; */
-    width: 80%;
-    margin-bottom: 10px;
-  }
-
-  .graficos2{
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    margin-bottom: 10px;
-    margin: -2.5%;
-  }
-
-  /* Chart box styling with a more refined panel look */
-  .graficos2 .chart-container {
-    width: 100%;
-    max-width: 550px;
-    background-color: #f8f9fb;
-    border-radius: 10px;
-    padding: 1.5px;
-    margin: 2% 1% 0% 0%;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: all 0.3s ease;
-  }
-
-  .chart-container {
-    width: 100%;
-    max-width: 550px;
-    background-color: #f8f9fb;
-    border-radius: 10px;
-    padding: 2.5px;
-    margin: 2%;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: all 0.3s ease;
-  }
-
-  .chart-container:hover {
-    box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
-  }
-
-  /* Chart titles with improved font style */
-  .chart-container b {
-    font-size: 1.1rem;
-    color: #4a5568;
-    margin-bottom: 15px;
-    font-weight: 600;
-  }
-
-  /* Responsive design adjustments */
-  @media (max-width: 768px) {
-    .graficos1,
-    .graficos2,
-    .grafico3 {
+    /* Panel-style layout for the charts */
+    .graficos {
+      display: flex;
       flex-direction: column;
       align-items: center;
+      width: 90%;
+      max-width: 1200px;
+      margin: 3% 1% 3% 7%;
+      padding-left: 10px;
+      padding: 20px;
+      background: linear-gradient(to bottom, #515a83, #232739, #191b27);
+      border-radius: 15px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Chart row styles */
+    .graficos1 {
+      display: flex;
+      flex-direction: row;
+      /* justify-content: space-between; */
+      width: 80%;
+      margin-bottom: 10px;
+    }
+
+    .graficos2 {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      margin-bottom: 10px;
+      margin: -2.5%;
+    }
+
+    /* Chart box styling with a more refined panel look */
+    .graficos2 .chart-container {
+      width: 100%;
+      max-width: 550px;
+      background-color: #f8f9fb;
+      border-radius: 10px;
+      padding: 1.5px;
+      margin: 2% 1% 0% 0%;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: all 0.3s ease;
     }
 
     .chart-container {
-      width: 90%;
-      margin-bottom: 20px;
+      width: 100%;
+      max-width: 550px;
+      background-color: #f8f9fb;
+      border-radius: 10px;
+      padding: 2.5px;
+      margin: 2%;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: all 0.3s ease;
     }
-  }
-    b{
+
+    .chart-container:hover {
+      box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+
+    /* Chart titles with improved font style */
+    .chart-container b {
+      font-size: 1.1rem;
+      color: #4a5568;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    /* Responsive design adjustments */
+    @media (max-width: 768px) {
+
+      .graficos1,
+      .graficos2,
+      .grafico3 {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .chart-container {
+        width: 90%;
+        margin-bottom: 20px;
+      }
+    }
+
+    b {
       margin-left: 9%;
     }
 
-    canvas{
+    canvas {
       width: 100%;
       z-index: 2px;
     }
@@ -151,27 +152,27 @@
         <li>
           <p style="margin-bottom: 20px;">
             <span id="nome" class="navItem-nome">
-     
+
             </span>
           </p>
         </li>
         <li><a href="../dashboardGerentePt2/dashboard_mensal.html"
-          style="background: rgba(199, 208, 216, 1);color: #191b27;">
-          <i class="fa-solid fa-magnifying-glass-chart"></i>
-          <span class="navItem" style="color: #191b27;">Mensal</span>
-        </a>
-      </li>
-      <li><a href="../dashboardGerentePt2/dashboard_funcionario.html">
-          <i class="fa-solid fa-user-plus"></i>
-          <span class="navItem">Funcionário</span>
-        </a></li>
+            style="background: rgba(199, 208, 216, 1);color: #191b27;">
+            <i class="fa-solid fa-magnifying-glass-chart"></i>
+            <span class="navItem" style="color: #191b27;">Mensal</span>
+          </a>
+        </li>
+        <li><a href="../dashboardGerentePt2/dashboard_funcionario.html">
+            <i class="fa-solid fa-user-plus"></i>
+            <span class="navItem">Funcionário</span>
+          </a></li>
         <div class="sair">
           <li><a href="https://heathtech.atlassian.net/servicedesk/customer/portal/4" target="_blank">
               <i class="fa-solid fa-headset"></i>
               <span class="navItem">Suporte</span>
             </a></li>
           <li>
-             <a href="../../index.html">
+            <a href="../../index.html">
               <i class="fa-solid fa-arrow-right-from-bracket"></i>
               <span class="navItem">Sair</span>
             </a>
@@ -190,188 +191,192 @@
     <option value="12">12 meses</option>
   </select>
 
-    <div class="graficos">
-      <div class="graficos1">
-        <div class="chart-container">
-          <b>Média Rede</b>
-          <canvas id="chart_Rede"></canvas>
-        </div>
-
-        <div class="chart-container">
-          <b>Média Uso Disco</b>
-          <canvas id="chart_Uso_Disco"></canvas>
-        </div>
+  <div class="graficos">
+    <div class="graficos1">
+      <div class="chart-container">
+        <b>Média Rede</b>
+        <canvas id="chart_Rede"></canvas>
       </div>
-      <div class="graficos2">
-        <div class="chart-container">
-          <b>Média Armazenamento</b>
-          <canvas id="chart_Armazenamento"></canvas>
-        </div>
-        <div class="chart-container">
-          <b>Média Uso CPU</b>
-          <canvas id="chart_CPU_Uso"></canvas>
-        </div>
-        <div class="chart-container">
-          <b>Média RAM</b>
-          <canvas id="chart_Memória_RAM"></canvas>
-        </div>
+
+      <div class="chart-container">
+        <b>Média Uso Disco Usado</b>
+        <canvas id="chart_Uso_do Disco Usado"></canvas>
       </div>
     </div>
+    <div class="graficos2">
+      <div class="chart-container">
+        <b>Média Armazenamento</b>
+        <canvas id="chart_Uso_do Disco Total"></canvas>
+      </div>
+      <div class="chart-container">
+        <b>Média Uso CPU</b>
+        <canvas id="chart_Uso_da CPU"></canvas>
+      </div>
+      <div class="chart-container">
+        <b>Média RAM</b>
+        <canvas id="chart_Memória_Usada"></canvas>
+      </div>
+    </div>
+  </div>
 
 </body>
+
 </html>
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 <script>
-  let chartComponents = {}; // Armazena os gráficos de cada componente
-  
-  // Função para buscar dados de médias mensais e atualizar gráficos
-  function gerarGraficosMediasMensais(){
+  let chartComponents = {};
+
+  function gerarGraficosMediasMensais() {
     var periodo = selecTempo.value;
-      fetch(`/medidas/buscarMediasMensais/${periodo}`, {
-          method: "GET",
-          headers: {
-              "Content-Type": "application/json"
-          }
-      }).then(function (resposta) {
-          if (resposta.ok) {
-              resposta.json().then(json => {
-                  // Organizar dados por componente
-                  const dadosComponentes = {};
-                  json.forEach(item => {
-                      if (!dadosComponentes[item.componente]) {
-                          dadosComponentes[item.componente] = { 
-                              labels: [], 
-                              data: [] 
-                          };
-                      }
-                      dadosComponentes[item.componente].labels.push(item.mes_ano);
-                      dadosComponentes[item.componente].data.push(item.media_valor);
-                  });
 
-                  // Atualizar gráficos para CPU, Memória e Armazenamento
-                  ["CPU Uso", "Memória RAM", "Armazenamento", "Uso Disco"].forEach(componente => {
-                      if (dadosComponentes[componente]) {
-                          atualizarGrafico(componente, dadosComponentes[componente].labels, dadosComponentes[componente].data);
-                      }
-                  });
+    fetch(`/medidas/buscarMediasMensais/${periodo}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(function (resposta) {
+      if (resposta.ok) {
+        resposta.json().then(json => {
+          const dadosComponentes = {};
+          json.forEach(item => {
+            if (!dadosComponentes[item.componente]) {
+              dadosComponentes[item.componente] = { labels: [], data: [] };
+            }
+            dadosComponentes[item.componente].labels.push(item.mes_ano);
+            dadosComponentes[item.componente].data.push(item.media_valor);
+          });
 
-                  // Atualizar gráfico de rede com upload e download juntos
-                  if (dadosComponentes["Rede Upload"] && dadosComponentes["Rede Download"]) {
-                      atualizarGraficoRede(
-                          dadosComponentes["Rede Upload"].labels, 
-                          dadosComponentes["Rede Upload"].data, 
-                          dadosComponentes["Rede Download"].data
-                      );
-                  }
-              });
-          } else {
-              console.log("Erro ao buscar dados de médias mensais.");
-              resposta.text().then(texto => console.error(texto));
+          ["Uso da CPU", "Memória Usada", "Uso do Disco Total", "Uso do Disco Usado"].forEach(componente => {
+            if (dadosComponentes[componente]) {
+              atualizarGrafico(componente, dadosComponentes[componente].labels, dadosComponentes[componente].data);
+            }
+          });
+
+          if (dadosComponentes["Bytes Enviados"] && dadosComponentes["Bytes Recebidos"]) {
+            atualizarGraficoRede(
+              dadosComponentes["Bytes Enviados"].labels,
+              dadosComponentes["Bytes Enviados"].data,
+              dadosComponentes["Bytes Recebidos"].data
+            );
           }
-      }).catch(function (erro) {
-          console.log("Erro na requisição:", erro);
-      });
+        });
+      } else {
+        console.log("Erro ao buscar dados de médias mensais.");
+        resposta.text().then(texto => console.error(texto));
+      }
+    }).catch(function (erro) {
+      console.log("Erro na requisição:", erro);
+    });
   }
 
-  // Função para criar ou atualizar o gráfico de um componente
   function atualizarGrafico(componente, labels, data) {
-      const canvasId = `chart_${componente.replace(" ", "_")}`; // ID único para cada canvas
-      let ctx = document.getElementById(canvasId).getContext('2d');
+    const canvasId = `chart_${componente.replace(" ", "_")}`;
+    const canvas = document.getElementById(canvasId);
 
-      if (chartComponents[componente]) {
-          chartComponents[componente].destroy(); // Destroi o gráfico existente
-      }
+    if (!canvas) {
+      console.error(`Canvas com ID ${canvasId} não encontrado.`);
+      return;
+    }
 
-      // Cria um gráfico de linha
-      chartComponents[componente] = new Chart(ctx, {
-          type: 'line',
-          data: {
-              labels: labels, // Mês/Ano
-              datasets: [{
-                  label: `Média de ${componente}`,
-                  data: data,
-                  borderColor: 'rgb(35, 39, 57)',
-                  backgroundColor: 'rgba(35, 39, 57, 0.2)',
-                  fill: true,
-                  borderWidth: 2,
-                  tension: 0.1 // Suaviza a linha
-              }]
-          },
-          options: {
-              responsive: true,
-              plugins: {
-                  tooltip: {
-                      callbacks: {
-                          label: function(context) {
-                              return `${context.raw.toFixed(2)}`; // Valor com duas casas decimais
-                          }
-                      }
-                  }
+    let ctx = canvas.getContext('2d');
+    if (chartComponents[componente]) {
+      chartComponents[componente].destroy();
+    }
+
+    chartComponents[componente] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: `Média de ${componente}`,
+          data: data,
+          borderColor: 'rgb(35, 39, 57)',
+          backgroundColor: 'rgba(35, 39, 57, 0.2)',
+          fill: true,
+          borderWidth: 2,
+          tension: 0.1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                return `${context.raw.toFixed(2)}`;
               }
+            }
           }
-      });
+        }
+      }
+    });
   }
 
-  // Função para criar ou atualizar o gráfico de rede com upload e download
   function atualizarGraficoRede(labels, dataUpload, dataDownload) {
-      const canvasId = "chart_Rede"; // ID do canvas para o gráfico de Rede
-      let ctx = document.getElementById(canvasId).getContext('2d');
+    const canvasId = "chart_Rede";
+    const canvas = document.getElementById(canvasId);
 
-      if (chartComponents["Rede"]) {
-          chartComponents["Rede"].destroy(); // Destroi o gráfico existente de Rede
-      }
+    if (!canvas) {
+      console.error(`Canvas com ID ${canvasId} não encontrado.`);
+      return;
+    }
 
-      // Cria um gráfico de linha para upload e download
-      chartComponents["Rede"] = new Chart(ctx, {
-          type: 'line',
-          data: {
-              labels: labels, // Mês/Ano
-              datasets: [
-                  {
-                      label: 'Média de Upload',
-                      data: dataUpload,
-                      borderColor: 'rgba(54, 162, 235, 1)',
-                      backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                      fill: true,
-                      borderWidth: 2,
-                      tension: 0.1 // Suaviza a linha
-                  },
-                  {
-                      label: 'Média de Download',
-                      data: dataDownload,
-                      borderColor: 'rgba(255, 99, 132, 1)',
-                      backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                      fill: true,
-                      borderWidth: 2,
-                      tension: 0.1 // Suaviza a linha
-                  }
-              ]
+    let ctx = canvas.getContext('2d');
+    if (chartComponents["Rede"]) {
+      chartComponents["Rede"].destroy();
+    }
+
+    chartComponents["Rede"] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Média de Upload',
+            data: dataUpload,
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            fill: true,
+            borderWidth: 2,
+            tension: 0.1
           },
-          options: {
-              responsive: true,
-              plugins: {
-                  tooltip: {
-                      callbacks: {
-                          label: function(context) {
-                              return `${context.raw.toFixed(2)}`; // Valor com duas casas decimais
-                          }
-                      }
-                  }
-              }
+          {
+            label: 'Média de Download',
+            data: dataDownload,
+            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            fill: true,
+            borderWidth: 2,
+            tension: 0.1
           }
-      });
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                return `${context.raw.toFixed(2)}`;
+              }
+            }
+          }
+        }
+      }
+    });
   }
 
-  // Função para iniciar a atualização periódica
   function iniciarAtualizacaoGraficos() {
-      gerarGraficosMediasMensais();
-      setInterval(gerarGraficosMediasMensais, 60000); // Atualiza a cada 1 minuto
+    gerarGraficosMediasMensais();
+    setInterval(gerarGraficosMediasMensais, 60000);
   }
 
-  // Chama a função para iniciar a atualização assim que a página carregar
-  window.onload = iniciarAtualizacaoGraficos;
-</script>
 
+  window.onload = iniciarAtualizacaoGraficos;
+
+
+</script>

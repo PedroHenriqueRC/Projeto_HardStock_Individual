@@ -9,69 +9,49 @@ CREATE TABLE IF NOT EXISTS Funcionario (
     idFuncionario INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50),
     sobrenome VARCHAR(100),
-    numeroTelefone char(11),
+    numeroTelefone char(16),
     email VARCHAR(256),
     senha VARCHAR(256),	
     permissao VARCHAR(45),
-    fkAdministrador INT,
     fkEmpresa INT,
-    estado varchar(45) default "Ativo",
-    fkHardStock VARCHAR(45) DEFAULT "NP",
-    FOREIGN KEY (fkAdministrador) REFERENCES Funcionario(idFuncionario)
-);
+    estado varchar(45) default "Ativo"
+  );
 
 -- Inserindo um registro na tabela Funcionario
-INSERT INTO Funcionario (nome, sobrenome, numeroTelefone, email, senha, permissao, fkAdministrador, fkHardStock)
-VALUES ('João', 'Silva', 123456789, 'joao.silva@empresa.com', 'senhaSegura123', 'Adm', NULL, 'NP');
+INSERT INTO Funcionario (nome, sobrenome, numeroTelefone, email, senha, permissao,fkEmpresa)
+VALUES ('João', 'Silva', '(11) 91234-5678', 'joao.silva@empresa.com', 'senhaSegura123', 'Analista',1);
 
-INSERT INTO Funcionario (nome, sobrenome, numeroTelefone, email, senha, permissao, fkAdministrador, fkHardStock)
-VALUES ('eli', 'rufino', 123456789, 'eli.rufino@empresa.com', '123456', '1', NULL, 'NP');
+INSERT INTO Funcionario (nome, sobrenome, numeroTelefone, email, senha, permissao)
+VALUES ('Pedro', 'Henrique', '(11) 96275-2952', 'pedrohenrique@techsolutions.com', '123456789', 'Gerente',1);
+
+select *from empresa;
 
 -- Tabela Empresa para armazenar informações da empresa
 CREATE TABLE IF NOT EXISTS Empresa (
     idEmpresa INT AUTO_INCREMENT PRIMARY KEY,
-    fkRepresentante INT DEFAULT NULL,
     razaoSocial VARCHAR(256),
-    cnpj CHAR(14),
+    cnpj CHAR(20),
 	estado varchar(45) default "Ativo",
-    emailCorporativo VARCHAR(256),
-    FOREIGN KEY (fkRepresentante) REFERENCES Funcionario(idFuncionario)
+    emailCorporativo VARCHAR(256)
 );
 select * from Empresa;
 -- Inserindo um registro na tabela Empresa, relacionando com Funcionario
-INSERT INTO Empresa (fkRepresentante, razaoSocial, cnpj, emailCorporativo)
-VALUES (1, 'Tech Solutions Ltda', '12345678000195', 'contato@techsolutions.com');
+INSERT INTO Empresa (razaoSocial, cnpj, emailCorporativo)
+VALUES ('Tech Solutions Ltda', '00.123.456/0001-23', 'contato@techsolutions.com');
 
 -- Tabela Especificacoes para armazenar detalhes técnicos de servidores
-CREATE TABLE IF NOT EXISTS Especificacoes (
-    idEspecificacao INT AUTO_INCREMENT PRIMARY KEY,
-    distribuicao VARCHAR(70),
-    sistemaOperacional VARCHAR(50),
-    processador VARCHAR(100),
-    memoriaRam INT,
-    qntDisco INT,
-    placaRede VARCHAR(50)
-);
--- Inserindo um registro na tabela Especificacoes
-INSERT INTO Especificacoes (distribuicao, sistemaOperacional, processador, memoriaRam, qntDisco, placaRede)
-VALUES ('Ubuntu', 'Linux', 'Intel Xeon E5', 16, 2, 'Intel Ethernet I210');
-
-
--- Tabela Servidor para armazenar dados dos servidores e associá-los à empresa e especificações
--- Tabela Servidor para armazenar dados dos servidores e associá-los à empresa e especificações
 CREATE TABLE IF NOT EXISTS Servidor (
     idServidor INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50),
+    rede VARCHAR(50),
+    ram VARCHAR(20),
+    disco VARCHAR(20),
+    cpu_ VARCHAR(20),
     fkEmpresa INT,
-    fkEspecificacao INT,
-    UNIQUE (idServidor),  -- Garantir que idServidor seja único
-    FOREIGN KEY (fkEmpresa) REFERENCES Empresa(idEmpresa),
-    FOREIGN KEY (fkEspecificacao) REFERENCES Especificacoes(idEspecificacao)
+    FOREIGN KEY (fkEmpresa) REFERENCES Empresa(idEmpresa)
 );
 
--- Inserindo um registro na tabela Servidor, relacionando com Empresa e Especificacoes
-INSERT INTO Servidor (nome, fkEmpresa, fkEspecificacao)
-VALUES ('ServidorPrincipal', 1, 1);
+insert into servidor(nome,rede,ram,disco,cpu_,fkEmpresa) values ("Servidor 11° andar", "LAN","4GB","256GB","4 Núcleos",1);
 
 -- Tabela Componentes para definir o tipo de componente e unidade de medida
 CREATE TABLE IF NOT EXISTS Componentes (
@@ -80,34 +60,15 @@ CREATE TABLE IF NOT EXISTS Componentes (
     unidadeMedida VARCHAR(20) NOT NULL -- Unidade de medida (e.g., %, GB)
 );
 
-INSERT INTO Componentes (nome, unidadeMedida) VALUES 
-('CPU Uso', '%'),
-('Memória RAM', 'GB'),
-('Armazenamento', 'GB'),
-('Uso Disco', '%'),
-('Rede Upload', 'Mbps'),
-('Rede Download', 'Mbps');
-
-
-/*
 INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Bytes Enviados', 'MB');
 INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Bytes Recebidos', 'MB');
 INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Uso da CPU', '%');
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Velocidade da CPU', 'MHz');
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Tempo Ativo da CPU', 's');
 INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Uso do Disco Total', 'GB');
 INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Uso do Disco Usado', 'GB');
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Uso do Disco Livre', 'GB');
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Porcentagem de Disco Usado', '%');
 INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Tempo de Leitura do Disco', 'ms');
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Tempo de Gravação do Disco', 'ms');
 INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Memória Total', 'GB');
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Memória Disponível', 'GB');
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Porcentagem de Memória Usada', '%');
 INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Memória Usada', 'GB');
-*/
 
-select * from funcionario;
 
 -- Tabela Capturas para armazenar os valores capturados de componentes
 CREATE TABLE IF NOT EXISTS Capturas (
@@ -120,142 +81,557 @@ CREATE TABLE IF NOT EXISTS Capturas (
     FOREIGN KEY (fkServidor) REFERENCES Servidor(idServidor)
 );
 
--- Inserindo capturas para monitoramento dos componentes em dois servidores
-INSERT INTO Capturas (data_hora, valor, fkComponente, fkServidor) VALUES
-('2024-11-05 09:00:00', 35.2, 1, 1),
-('2024-11-05 09:01:00', 36.8, 1, 1),
-('2024-11-05 09:02:00', 33.5, 1, 1),
-('2024-11-05 09:03:00', 40.1, 1, 1),
-('2024-11-05 09:04:00', 45.6, 1, 1),
-('2024-11-05 09:05:00', 50.0, 1, 1),
-('2024-11-05 09:06:00', 55.3, 1, 1),
-('2024-11-05 09:07:00', 60.7, 1, 1),
-('2024-11-05 09:08:00', 65.2, 1, 1),
-('2024-11-05 09:09:00', 70.1, 1, 1),
-
-('2024-11-05 09:00:00', 8.5, 2, 1),
-('2024-11-05 09:01:00', 8.2, 2, 1),
-('2024-11-05 09:02:00', 7.9, 2, 1),
-('2024-11-05 09:03:00', 8.1, 2, 1),
-('2024-11-05 09:04:00', 8.0, 2, 1),
-('2024-11-05 09:05:00', 8.3, 2, 1),
-('2024-11-05 09:06:00', 7.8, 2, 1),
-('2024-11-05 09:07:00', 8.6, 2, 1),
-('2024-11-05 09:08:00', 8.4, 2, 1),
-('2024-11-05 09:09:00', 8.7, 2, 1),
-
-('2024-11-05 09:00:00', 120.5, 3, 1),
-('2024-11-05 09:01:00', 121.0, 3, 1),
-('2024-11-05 09:02:00', 119.9, 3, 1),
-('2024-11-05 09:03:00', 122.3, 3, 1),
-('2024-11-05 09:04:00', 121.4, 3, 1),
-('2024-11-05 09:05:00', 119.7, 3, 1),
-('2024-11-05 09:06:00', 120.8, 3, 1),
-('2024-11-05 09:07:00', 121.2, 3, 1),
-('2024-11-05 09:08:00', 120.3, 3, 1),
-('2024-11-05 09:09:00', 119.6, 3, 1),
-
-('2024-11-05 09:00:00', 52.3, 4, 2),
-('2024-11-05 09:01:00', 53.1, 4, 2),
-('2024-11-05 09:02:00', 51.8, 4, 2),
-('2024-11-05 09:03:00', 54.0, 4, 2),
-('2024-11-05 09:04:00', 53.7, 4, 2),
-('2024-11-05 09:05:00', 52.2, 4, 2),
-('2024-11-05 09:06:00', 54.3, 4, 2),
-('2024-11-05 09:07:00', 53.9, 4, 2),
-('2024-11-05 09:08:00', 52.7, 4, 2),
-('2024-11-05 09:09:00', 54.1, 4, 2),
-
-('2024-11-05 09:00:00', 30.2, 5, 2),
-('2024-11-05 09:01:00', 29.9, 5, 2),
-('2024-11-05 09:02:00', 31.0, 5, 2),
-('2024-11-05 09:03:00', 30.7, 5, 2),
-('2024-11-05 09:04:00', 30.5, 5, 2),
-('2024-11-05 09:05:00', 31.1, 5, 2),
-('2024-11-05 09:06:00', 30.4, 5, 2),
-('2024-11-05 09:07:00', 30.8, 5, 2),
-('2024-11-05 09:08:00', 30.1, 5, 2),
-('2024-11-05 09:09:00', 31.2, 5, 2),
-
-('2024-11-05 09:00:00', 25.1, 6, 2),
-('2024-11-05 09:01:00', 24.8, 6, 2),
-('2024-11-05 09:02:00', 25.5, 6, 2),
-('2024-11-05 09:03:00', 25.2, 6, 2),
-('2024-11-05 09:04:00', 24.9, 6, 2),
-('2024-11-05 09:05:00', 25.6, 6, 2),
-('2024-11-05 09:06:00', 25.0, 6, 2),
-('2024-11-05 09:07:00', 25.3, 6, 2),
-('2024-11-05 09:08:00', 24.7, 6, 2),
-('2024-11-05 09:09:00', 25.4, 6, 2);
+ALTER TABLE Capturas
+MODIFY COLUMN data_hora DATETIME NOT NULL;
 
 
--- Exemplo de componentes para referência
-INSERT INTO Componentes (nome, unidadeMedida) VALUES 
-('CPU Uso', '%'),
-('Memória RAM', 'GB'),
-('Disco', '%');
-
--- Certifique-se de que existem dados em Componentes e Servidor antes de rodar isso
-
-DELIMITER $$
-
-CREATE PROCEDURE PopulateCapturas()
-BEGIN
-    DECLARE startDate DATE DEFAULT CURDATE() - INTERVAL 180 DAY;
-    DECLARE endDate DATE DEFAULT CURDATE();
+-- Exemplo de inserts para a tabela Capturas
+INSERT INTO Capturas (data_hora, valor, fkComponente, fkServidor)
+VALUES 
+    -- Novembro de 2023
+    ('2023-11-05 14:20:00', 102.5, 1, 1),
+    ('2023-11-10 15:30:00', 97.3, 1, 1),
+    ('2023-11-15 10:25:00', 110.2, 1, 1),
+    ('2023-11-20 08:45:00', 95.8, 1, 1),
+    ('2023-11-25 17:55:00', 101.7, 1, 1),
     
-    WHILE startDate < endDate DO
-        -- Insere 3 registros para a data atual (startDate) com valores aleatórios
-        INSERT INTO Capturas (data_hora, valor, fkComponente, fkServidor)
-        VALUES
-            (startDate + INTERVAL RAND() * 24 HOUR, RAND() * 100, FLOOR(1 + RAND() * (SELECT COUNT(*) FROM Componentes)), 1),
-            (startDate + INTERVAL RAND() * 24 HOUR, RAND() * 100, FLOOR(1 + RAND() * (SELECT COUNT(*) FROM Componentes)), 1),
-            (startDate + INTERVAL RAND() * 24 HOUR, RAND() * 100, FLOOR(1 + RAND() * (SELECT COUNT(*) FROM Componentes)), 1);
+    ('2023-11-05 11:15:00', 210.5, 2, 1),
+    ('2023-11-10 12:30:00', 205.7, 2, 1),
+    ('2023-11-15 13:35:00', 220.9, 2, 1),
+    ('2023-11-20 14:40:00', 215.4, 2, 1),
+    ('2023-11-25 16:50:00', 219.6, 2, 1),
 
-        -- Incrementa o dia
-        SET startDate = startDate + INTERVAL 1 DAY;
-    END WHILE;
+    -- Exemplo para uso da CPU (componente 3)
+    ('2023-11-06 09:20:00', 40.5, 3, 1),
+    ('2023-11-11 10:30:00', 42.7, 3, 1),
+    ('2023-11-16 11:35:00', 38.6, 3, 1),
+    ('2023-11-21 12:40:00', 45.3, 3, 1),
+    ('2023-11-26 13:50:00', 39.9, 3, 1),
 
-END$$
+    -- Exemplo para uso do Disco Total (componente 4)
+    ('2023-11-07 07:20:00', 800.5, 4, 1),
+    ('2023-11-12 08:30:00', 810.3, 4, 1),
+    ('2023-11-17 09:35:00', 805.2, 4, 1),
+    ('2023-11-22 10:40:00', 798.4, 4, 1),
+    ('2023-11-27 11:50:00', 815.6, 4, 1),
 
-DELIMITER ;
+    -- Exemplo para uso do Disco Usado (componente 5)
+    ('2023-11-08 06:20:00', 500.2, 5, 1),
+    ('2023-11-13 07:30:00', 490.1, 5, 1),
+    ('2023-11-18 08:35:00', 495.8, 5, 1),
+    ('2023-11-23 09:40:00', 508.6, 5, 1),
+    ('2023-11-28 10:50:00', 504.3, 5, 1),
 
--- Chame a stored procedure para executar as inserções
-CALL PopulateCapturas();
+    -- Exemplo para Memória Usada (componente 8)
+    ('2023-11-09 05:20:00', 16.5, 8, 1),
+    ('2023-11-14 06:30:00', 15.8, 8, 1),
+    ('2023-11-19 07:35:00', 17.2, 8, 1),
+    ('2023-11-24 08:40:00', 16.1, 8, 1),
+    ('2023-11-29 09:50:00', 17.0, 8, 1),
 
-
-
-SELECT 
-    Capturas.valor,
-    Componentes.nome AS componente
-FROM 
-    Capturas
-JOIN 
-    Componentes ON Capturas.fkComponente = Componentes.idComponente;
-
-
-SELECT 
-    c.nome AS nomeComponente,
-    AVG(cap.valor) AS mediaValor
-FROM 
-    Capturas cap
-JOIN 
-    Componentes c ON cap.fkComponente = c.idComponente
-GROUP BY 
-    c.nome;
-
-SELECT 
-    c.nome AS nomeComponente,
-    AVG(cap.valor) AS mediaValor
-FROM 
-    Capturas cap
-JOIN 
-    Componentes c ON cap.fkComponente = c.idComponente
-WHERE 
-    cap.data_hora >= NOW() - INTERVAL 180 DAY
-GROUP BY 
-    c.nome;
+-- DEZEMBRO
+	('2023-12-05 14:20:00', 102.5, 1, 1),
+    ('2023-12-10 15:30:00', 97.3, 1, 1),
+    ('2023-12-15 10:25:00', 110.2, 1, 1),
+    ('2023-12-20 08:45:00', 95.8, 1, 1),
+    ('2023-12-25 17:55:00', 101.7, 1, 1),
     
+    ('2023-12-05 11:15:00', 210.5, 2, 1),
+    ('2023-12-10 12:30:00', 205.7, 2, 1),
+    ('2023-12-15 13:35:00', 220.9, 2, 1),
+    ('2023-12-20 14:40:00', 215.4, 2, 1),
+    ('2023-12-25 16:50:00', 219.6, 2, 1),
+
+    -- Exemplo para uso da CPU (componente 3)
+    ('2023-12-06 09:20:00', 40.5, 3, 1),
+    ('2023-12-11 10:30:00', 42.7, 3, 1),
+    ('2023-12-16 11:35:00', 38.6, 3, 1),
+    ('2023-12-21 12:40:00', 45.3, 3, 1),
+    ('2023-12-26 13:50:00', 39.9, 3, 1),
+
+    -- Exemplo para uso do Disco Total (componente 4)
+    ('2023-12-07 07:20:00', 800.5, 4, 1),
+    ('2023-12-12 08:30:00', 810.3, 4, 1),
+    ('2023-12-17 09:35:00', 805.2, 4, 1),
+    ('2023-12-22 10:40:00', 798.4, 4, 1),
+    ('2023-12-27 11:50:00', 815.6, 4, 1),
+
+    -- Exemplo para uso do Disco Usado (componente 5)
+    ('2023-12-08 06:20:00', 500.2, 5, 1),
+    ('2023-12-13 07:30:00', 490.1, 5, 1),
+    ('2023-12-18 08:35:00', 495.8, 5, 1),
+    ('2023-12-23 09:40:00', 508.6, 5, 1),
+    ('2023-12-28 10:50:00', 504.3, 5, 1),
+    
+    -- Exemplo para Memória Usada (componente 8)
+    ('2023-12-09 05:20:00', 16.5, 8, 1),
+    ('2023-12-14 06:30:00', 15.8, 8, 1),
+    ('2023-12-19 07:35:00', 17.2, 8, 1),
+    ('2023-12-24 08:40:00', 16.1, 8, 1),
+    ('2023-12-29 09:50:00', 17.0, 8, 1),
+    
+    -- JANEIRO
+	('2024-01-05 14:20:00', 102.5, 1, 1),
+    ('2024-01-10 15:30:00', 97.3, 1, 1),
+    ('2024-01-15 10:25:00', 110.2, 1, 1),
+    ('2024-01-20 08:45:00', 95.8, 1, 1),
+    ('2024-01-25 17:55:00', 101.7, 1, 1),
+    
+    ('2024-01-05 11:15:00', 210.5, 2, 1),
+    ('2024-01-10 12:30:00', 205.7, 2, 1),
+    ('2024-01-15 13:35:00', 220.9, 2, 1),
+    ('2024-01-20 14:40:00', 215.4, 2, 1),
+    ('2024-01-25 16:50:00', 219.6, 2, 1),
+
+    -- Exemplo para uso da CPU (componente 3)
+    ('2024-01-06 09:20:00', 40.5, 3, 1),
+    ('2024-01-11 10:30:00', 42.7, 3, 1),
+    ('2024-01-16 11:35:00', 38.6, 3, 1),
+    ('2024-01-21 12:40:00', 45.3, 3, 1),
+    ('2024-01-26 13:50:00', 39.9, 3, 1),
+
+    -- Exemplo para uso do Disco Total (componente 4)
+    ('2024-01-07 07:20:00', 800.5, 4, 1),
+    ('2024-01-12 08:30:00', 810.3, 4, 1),
+    ('2024-01-17 09:35:00', 805.2, 4, 1),
+    ('2024-01-22 10:40:00', 798.4, 4, 1),
+    ('2024-01-27 11:50:00', 815.6, 4, 1),
+
+    -- Exemplo para uso do Disco Usado (componente 5)
+    ('2024-01-08 06:20:00', 500.2, 5, 1),
+    ('2024-01-13 07:30:00', 490.1, 5, 1),
+    ('2024-01-18 08:35:00', 495.8, 5, 1),
+    ('2024-01-23 09:40:00', 508.6, 5, 1),
+    ('2024-01-28 10:50:00', 504.3, 5, 1),
+    
+    -- Exemplo para Memória Usada (componente 8)
+    ('2024-01-09 05:20:00', 16.5, 8, 1),
+    ('2024-01-14 06:30:00', 15.8, 8, 1),
+    ('2024-01-19 07:35:00', 17.2, 8, 1),
+    ('2024-01-24 08:40:00', 16.1, 8, 1),
+    ('2024-01-29 09:50:00', 17.0, 8, 1),
+    
+    -- FEVEREIRO 
+	('2024-02-05 14:20:00', 102.5, 1, 1),
+    ('2024-02-10 15:30:00', 97.3, 1, 1),
+    ('2024-02-15 10:25:00', 110.2, 1, 1),
+    ('2024-02-20 08:45:00', 95.8, 1, 1),
+    ('2024-02-25 17:55:00', 101.7, 1, 1),
+    
+    ('2024-02-05 11:15:00', 210.5, 2, 1),
+    ('2024-02-10 12:30:00', 205.7, 2, 1),
+    ('2024-02-15 13:35:00', 220.9, 2, 1),
+    ('2024-02-20 14:40:00', 215.4, 2, 1),
+    ('2024-02-25 16:50:00', 219.6, 2, 1),
+
+    -- Exemplo para uso da CPU (componente 3)
+    ('2024-02-06 09:20:00', 40.5, 3, 1),
+    ('2024-02-11 10:30:00', 42.7, 3, 1),
+    ('2024-02-16 11:35:00', 38.6, 3, 1),
+    ('2024-02-21 12:40:00', 45.3, 3, 1),
+    ('2024-02-26 13:50:00', 39.9, 3, 1),
+
+    -- Exemplo para uso do Disco Total (componente 4)
+    ('2024-02-07 07:20:00', 800.5, 4, 1),
+    ('2024-02-12 08:30:00', 810.3, 4, 1),
+    ('2024-02-17 09:35:00', 805.2, 4, 1),
+    ('2024-02-22 10:40:00', 798.4, 4, 1),
+    ('2024-02-27 11:50:00', 815.6, 4, 1),
+
+    -- Exemplo para uso do Disco Usado (componente 5)
+    ('2024-02-08 06:20:00', 500.2, 5, 1),
+    ('2024-02-13 07:30:00', 490.1, 5, 1),
+    ('2024-02-18 08:35:00', 495.8, 5, 1),
+    ('2024-02-23 09:40:00', 508.6, 5, 1),
+    ('2024-02-28 10:50:00', 504.3, 5, 1),
+    
+    -- Exemplo para Memória Usada (componente 8)
+    ('2024-02-09 05:20:00', 16.5, 8, 1),
+    ('2024-02-14 06:30:00', 15.8, 8, 1),
+    ('2024-02-19 07:35:00', 17.2, 8, 1),
+    ('2024-02-24 08:40:00', 16.1, 8, 1),
+    ('2024-02-29 09:50:00', 17.0, 8, 1),
+
+-- MARÇO
+	
+	('2024-03-05 14:20:00', 102.5, 1, 1),
+    ('2024-03-10 15:30:00', 97.3, 1, 1),
+    ('2024-03-15 10:25:00', 110.2, 1, 1),
+    ('2024-03-20 08:45:00', 95.8, 1, 1),
+    ('2024-03-25 17:55:00', 101.7, 1, 1),
+    
+    ('2024-03-05 11:15:00', 210.5, 2, 1),
+    ('2024-03-10 12:30:00', 205.7, 2, 1),
+    ('2024-03-15 13:35:00', 220.9, 2, 1),
+    ('2024-03-20 14:40:00', 215.4, 2, 1),
+    ('2024-03-25 16:50:00', 219.6, 2, 1),
+
+    -- Exemplo para uso da CPU (componente 3)
+    ('2024-03-06 09:20:00', 40.5, 3, 1),
+    ('2024-03-11 10:30:00', 42.7, 3, 1),
+    ('2024-03-16 11:35:00', 38.6, 3, 1),
+    ('2024-03-21 12:40:00', 45.3, 3, 1),
+    ('2024-03-26 13:50:00', 39.9, 3, 1),
+
+    -- Exemplo para uso do Disco Total (componente 4)
+    ('2024-03-07 07:20:00', 800.5, 4, 1),
+    ('2024-03-12 08:30:00', 810.3, 4, 1),
+    ('2024-03-17 09:35:00', 805.2, 4, 1),
+    ('2024-03-22 10:40:00', 798.4, 4, 1),
+    ('2024-03-27 11:50:00', 815.6, 4, 1),
+
+    -- Exemplo para uso do Disco Usado (componente 5)
+    ('2024-03-08 06:20:00', 500.2, 5, 1),
+    ('2024-03-13 07:30:00', 490.1, 5, 1),
+    ('2024-03-18 08:35:00', 495.8, 5, 1),
+    ('2024-03-23 09:40:00', 508.6, 5, 1),
+    ('2024-03-28 10:50:00', 504.3, 5, 1),
+    
+    -- Exemplo para Memória Usada (componente 8)
+    ('2024-03-09 05:20:00', 16.5, 8, 1),
+    ('2024-03-14 06:30:00', 15.8, 8, 1),
+    ('2024-03-19 07:35:00', 17.2, 8, 1),
+    ('2024-03-24 08:40:00', 16.1, 8, 1),
+    ('2024-03-29 09:50:00', 17.0, 8, 1),
+    
+    -- ABRIL
+    
+	('2024-04-05 14:20:00', 102.5, 1, 1),
+    ('2024-04-10 15:30:00', 97.3, 1, 1),
+    ('2024-04-15 10:25:00', 110.2, 1, 1),
+    ('2024-04-20 08:45:00', 95.8, 1, 1),
+    ('2024-04-25 17:55:00', 101.7, 1, 1),
+    
+    ('2024-04-05 11:15:00', 210.5, 2, 1),
+    ('2024-04-10 12:30:00', 205.7, 2, 1),
+    ('2024-04-15 13:35:00', 220.9, 2, 1),
+    ('2024-04-20 14:40:00', 215.4, 2, 1),
+    ('2024-04-25 16:50:00', 219.6, 2, 1),
+
+    -- Exemplo para uso da CPU (componente 3)
+    ('2024-04-06 09:20:00', 40.5, 3, 1),
+    ('2024-04-11 10:30:00', 42.7, 3, 1),
+    ('2024-04-16 11:35:00', 38.6, 3, 1),
+    ('2024-04-21 12:40:00', 45.3, 3, 1),
+    ('2024-04-26 13:50:00', 39.9, 3, 1),
+
+    -- Exemplo para uso do Disco Total (componente 4)
+    ('2024-04-07 07:20:00', 800.5, 4, 1),
+    ('2024-04-12 08:30:00', 810.3, 4, 1),
+    ('2024-04-17 09:35:00', 805.2, 4, 1),
+    ('2024-04-22 10:40:00', 798.4, 4, 1),
+    ('2024-04-27 11:50:00', 815.6, 4, 1),
+
+    -- Exemplo para uso do Disco Usado (componente 5)
+    ('2024-04-08 06:20:00', 500.2, 5, 1),
+    ('2024-04-13 07:30:00', 490.1, 5, 1),
+    ('2024-04-18 08:35:00', 495.8, 5, 1),
+    ('2024-04-23 09:40:00', 508.6, 5, 1),
+    ('2024-04-28 10:50:00', 504.3, 5, 1),
+    
+    -- Exemplo para Memória Usada (componente 8)
+    ('2024-04-09 05:20:00', 16.5, 8, 1),
+    ('2024-04-14 06:30:00', 15.8, 8, 1),
+    ('2024-04-19 07:35:00', 17.2, 8, 1),
+    ('2024-04-24 08:40:00', 16.1, 8, 1),
+    ('2024-04-29 09:50:00', 17.0, 8, 1),
+    
+    -- MAIO
+    
+	('2024-05-05 14:20:00', 102.5, 1, 1),
+    ('2024-05-10 15:30:00', 97.3, 1, 1),
+    ('2024-05-15 10:25:00', 110.2, 1, 1),
+    ('2024-05-20 08:45:00', 95.8, 1, 1),
+    ('2024-05-25 17:55:00', 101.7, 1, 1),
+    
+    ('2024-05-05 11:15:00', 210.5, 2, 1),
+    ('2024-05-10 12:30:00', 205.7, 2, 1),
+    ('2024-05-15 13:35:00', 220.9, 2, 1),
+    ('2024-05-20 14:40:00', 215.4, 2, 1),
+    ('2024-05-25 16:50:00', 219.6, 2, 1),
+
+    -- Exemplo para uso da CPU (componente 3)
+    ('2024-05-06 09:20:00', 40.5, 3, 1),
+    ('2024-05-11 10:30:00', 42.7, 3, 1),
+    ('2024-05-16 11:35:00', 38.6, 3, 1),
+    ('2024-05-21 12:40:00', 45.3, 3, 1),
+    ('2024-05-26 13:50:00', 39.9, 3, 1),
+
+    -- Exemplo para uso do Disco Total (componente 4)
+    ('2024-05-07 07:20:00', 800.5, 4, 1),
+    ('2024-05-12 08:30:00', 810.3, 4, 1),
+    ('2024-05-17 09:35:00', 805.2, 4, 1),
+    ('2024-05-22 10:40:00', 798.4, 4, 1),
+    ('2024-05-27 11:50:00', 815.6, 4, 1),
+
+    -- Exemplo para uso do Disco Usado (componente 5)
+    ('2024-05-08 06:20:00', 500.2, 5, 1),
+    ('2024-05-13 07:30:00', 490.1, 5, 1),
+    ('2024-05-18 08:35:00', 495.8, 5, 1),
+    ('2024-05-23 09:40:00', 508.6, 5, 1),
+    ('2024-05-28 10:50:00', 504.3, 5, 1),
+    
+    -- Exemplo para Memória Usada (componente 8)
+    ('2024-05-09 05:20:00', 16.5, 8, 1),
+    ('2024-05-14 06:30:00', 15.8, 8, 1),
+    ('2024-05-19 07:35:00', 17.2, 8, 1),
+    ('2024-05-24 08:40:00', 16.1, 8, 1),
+    ('2024-05-29 09:50:00', 17.0, 8, 1),
+    
+    -- JUNHO
+    
+	('2024-06-05 14:20:00', 102.5, 1, 1),
+    ('2024-06-10 15:30:00', 97.3, 1, 1),
+    ('2024-06-15 10:25:00', 110.2, 1, 1),
+    ('2024-06-20 08:45:00', 95.8, 1, 1),
+    ('2024-06-25 17:55:00', 101.7, 1, 1),
+    
+    ('2024-06-05 11:15:00', 210.5, 2, 1),
+    ('2024-06-10 12:30:00', 205.7, 2, 1),
+    ('2024-06-15 13:35:00', 220.9, 2, 1),
+    ('2024-06-20 14:40:00', 215.4, 2, 1),
+    ('2024-06-25 16:50:00', 219.6, 2, 1),
+
+    -- Exemplo para uso da CPU (componente 3)
+    ('2024-06-06 09:20:00', 40.5, 3, 1),
+    ('2024-06-11 10:30:00', 42.7, 3, 1),
+    ('2024-06-16 11:35:00', 38.6, 3, 1),
+    ('2024-06-21 12:40:00', 45.3, 3, 1),
+    ('2024-06-26 13:50:00', 39.9, 3, 1),
+
+    -- Exemplo para uso do Disco Total (componente 4)
+    ('2024-06-07 07:20:00', 800.5, 4, 1),
+    ('2024-06-12 08:30:00', 810.3, 4, 1),
+    ('2024-06-17 09:35:00', 805.2, 4, 1),
+    ('2024-06-22 10:40:00', 798.4, 4, 1),
+    ('2024-06-27 11:50:00', 815.6, 4, 1),
+
+    -- Exemplo para uso do Disco Usado (componente 5)
+    ('2024-06-08 06:20:00', 500.2, 5, 1),
+    ('2024-06-13 07:30:00', 490.1, 5, 1),
+    ('2024-06-18 08:35:00', 495.8, 5, 1),
+    ('2024-06-23 09:40:00', 508.6, 5, 1),
+    ('2024-06-28 10:50:00', 504.3, 5, 1),
+
+    -- Exemplo para Memória Usada (componente 8)
+    ('2024-06-09 05:20:00', 16.5, 8, 1),
+    ('2024-06-14 06:30:00', 15.8, 8, 1),
+    ('2024-06-19 07:35:00', 17.2, 8, 1),
+    ('2024-06-24 08:40:00', 16.1, 8, 1),
+    ('2024-06-29 09:50:00', 17.0, 8, 1),
+    
+    -- JULHO
+	
+	('2024-07-05 14:20:00', 102.5, 1, 1),
+    ('2024-07-10 15:30:00', 97.3, 1, 1),
+    ('2024-07-15 10:25:00', 110.2, 1, 1),
+    ('2024-07-20 08:45:00', 95.8, 1, 1),
+    ('2024-07-25 17:55:00', 101.7, 1, 1),
+    
+    ('2024-07-05 11:15:00', 210.5, 2, 1),
+    ('2024-07-10 12:30:00', 205.7, 2, 1),
+    ('2024-07-15 13:35:00', 220.9, 2, 1),
+    ('2024-07-20 14:40:00', 215.4, 2, 1),
+    ('2024-07-25 16:50:00', 219.6, 2, 1),
+
+    -- Exemplo para uso da CPU (componente 3)
+    ('2024-07-06 09:20:00', 40.5, 3, 1),
+    ('2024-07-11 10:30:00', 42.7, 3, 1),
+    ('2024-07-16 11:35:00', 38.6, 3, 1),
+    ('2024-07-21 12:40:00', 45.3, 3, 1),
+    ('2024-07-26 13:50:00', 39.9, 3, 1),
+
+    -- Exemplo para uso do Disco Total (componente 4)
+    ('2024-07-07 07:20:00', 800.5, 4, 1),
+    ('2024-07-12 08:30:00', 810.3, 4, 1),
+    ('2024-07-17 09:35:00', 805.2, 4, 1),
+    ('2024-07-22 10:40:00', 798.4, 4, 1),
+    ('2024-07-27 11:50:00', 815.6, 4, 1),
+
+    -- Exemplo para uso do Disco Usado (componente 5)
+    ('2024-07-08 06:20:00', 500.2, 5, 1),
+    ('2024-07-13 07:30:00', 490.1, 5, 1),
+    ('2024-07-18 08:35:00', 495.8, 5, 1),
+    ('2024-07-23 09:40:00', 508.6, 5, 1),
+    ('2024-07-28 10:50:00', 504.3, 5, 1),
+    
+    -- Exemplo para Memória Usada (componente 8)
+    ('2024-07-09 05:20:00', 16.5, 8, 1),
+    ('2024-07-14 06:30:00', 15.8, 8, 1),
+    ('2024-07-19 07:35:00', 17.2, 8, 1),
+    ('2024-07-24 08:40:00', 16.1, 8, 1),
+    ('2024-07-29 09:50:00', 17.0, 8, 1),
+
+	-- AGOSTO
+    
+	('2024-08-05 14:20:00', 102.5, 1, 1),
+    ('2024-08-10 15:30:00', 97.3, 1, 1),
+    ('2024-08-15 10:25:00', 110.2, 1, 1),
+    ('2024-08-20 08:45:00', 95.8, 1, 1),
+    ('2024-08-25 17:55:00', 101.7, 1, 1),
+    
+    ('2024-08-05 11:15:00', 210.5, 2, 1),
+    ('2024-08-10 12:30:00', 205.7, 2, 1),
+    ('2024-08-15 13:35:00', 220.9, 2, 1),
+    ('2024-08-20 14:40:00', 215.4, 2, 1),
+    ('2024-08-25 16:50:00', 219.6, 2, 1),
+
+    -- Exemplo para uso da CPU (componente 3)
+    ('2024-08-06 09:20:00', 40.5, 3, 1),
+    ('2024-08-11 10:30:00', 42.7, 3, 1),
+    ('2024-08-16 11:35:00', 38.6, 3, 1),
+    ('2024-08-21 12:40:00', 45.3, 3, 1),
+    ('2024-08-26 13:50:00', 39.9, 3, 1),
+    -- Exemplo para uso do Disco Total (componente 4)
+    ('2024-08-07 07:20:00', 800.5, 4, 1),
+    ('2024-08-12 08:30:00', 810.3, 4, 1),
+    ('2024-08-17 09:35:00', 805.2, 4, 1),
+    ('2024-08-22 10:40:00', 798.4, 4, 1),
+    ('2024-08-27 11:50:00', 815.6, 4, 1),
+
+    -- Exemplo para uso do Disco Usado (componente 5)
+    ('2024-08-08 06:20:00', 500.2, 5, 1),
+    ('2024-08-13 07:30:00', 490.1, 5, 1),
+    ('2024-08-18 08:35:00', 495.8, 5, 1),
+    ('2024-08-23 09:40:00', 508.6, 5, 1),
+    ('2024-08-28 10:50:00', 504.3, 5, 1),
+    
+    -- Exemplo para Memória Usada (componente 8)
+    ('2024-08-09 05:20:00', 16.5, 8, 1),
+    ('2024-08-14 06:30:00', 15.8, 8, 1),
+    ('2024-08-19 07:35:00', 17.2, 8, 1),
+    ('2024-08-24 08:40:00', 16.1, 8, 1),
+    ('2024-08-29 09:50:00', 17.0, 8, 1),
+    
+    -- SETEMBRO
+    
+	('2024-09-05 14:20:00', 102.5, 1, 1),
+    ('2024-09-10 15:30:00', 97.3, 1, 1),
+    ('2024-09-15 10:25:00', 110.2, 1, 1),
+    ('2024-09-20 08:45:00', 95.8, 1, 1),
+    ('2024-09-25 17:55:00', 101.7, 1, 1),
+    
+    ('2024-09-05 11:15:00', 210.5, 2, 1),
+    ('2024-09-10 12:30:00', 205.7, 2, 1),
+    ('2024-09-15 13:35:00', 220.9, 2, 1),
+    ('2024-09-20 14:40:00', 215.4, 2, 1),
+    ('2024-09-25 16:50:00', 219.6, 2, 1),
+
+    -- Exemplo para uso da CPU (componente 3)
+    ('2024-09-06 09:20:00', 40.5, 3, 1),
+    ('2024-09-11 10:30:00', 42.7, 3, 1),
+    ('2024-09-16 11:35:00', 38.6, 3, 1),
+    ('2024-09-21 12:40:00', 45.3, 3, 1),
+    ('2024-09-26 13:50:00', 39.9, 3, 1),
+    
+    -- Exemplo para uso do Disco Total (componente 4)
+    ('2024-09-07 07:20:00', 800.5, 4, 1),
+    ('2024-09-12 08:30:00', 810.3, 4, 1),
+    ('2024-09-17 09:35:00', 805.2, 4, 1),
+    ('2024-09-22 10:40:00', 798.4, 4, 1),
+    ('2024-09-27 11:50:00', 815.6, 4, 1),
+    
+    -- Exemplo para uso do Disco Usado (componente 5)
+    ('2024-09-08 06:20:00', 500.2, 5, 1),
+    ('2024-09-13 07:30:00', 490.1, 5, 1),
+    ('2024-09-18 08:35:00', 495.8, 5, 1),
+    ('2024-09-23 09:40:00', 508.6, 5, 1),
+    ('2024-09-28 10:50:00', 504.3, 5, 1),
+    
+    -- Exemplo para Memória Usada (componente 8)
+    ('2024-09-09 05:20:00', 16.5, 8, 1),
+    ('2024-09-14 06:30:00', 15.8, 8, 1),
+    ('2024-09-19 07:35:00', 17.2, 8, 1),
+    ('2024-09-24 08:40:00', 16.1, 8, 1),
+    ('2024-09-29 09:50:00', 17.0, 8, 1),
+    
+    -- OUTUBRO    
+    
+	('2024-10-05 14:20:00', 102.5, 1, 1),
+    ('2024-10-10 15:30:00', 97.3, 1, 1),
+    ('2024-10-15 10:25:00', 110.2, 1, 1),
+    ('2024-10-20 08:45:00', 95.8, 1, 1),
+    ('2024-10-25 17:55:00', 101.7, 1, 1),
+    
+    ('2024-10-05 11:15:00', 210.5, 2, 1),
+    ('2024-10-10 12:30:00', 205.7, 2, 1),
+    ('2024-10-15 13:35:00', 220.9, 2, 1),
+    ('2024-10-20 14:40:00', 215.4, 2, 1),
+    ('2024-10-25 16:50:00', 219.6, 2, 1),
+
+    -- Exemplo para uso da CPU (componente 3)
+    ('2024-10-06 09:20:00', 40.5, 3, 1),
+    ('2024-10-11 10:30:00', 42.7, 3, 1),
+    ('2024-10-16 11:35:00', 38.6, 3, 1),
+    ('2024-10-21 12:40:00', 45.3, 3, 1),
+    ('2024-10-26 13:50:00', 39.9, 3, 1),
+
+    -- Exemplo para uso do Disco Total (componente 4)
+    ('2024-10-07 07:20:00', 800.5, 4, 1),
+    ('2024-10-12 08:30:00', 810.3, 4, 1),
+    ('2024-10-17 09:35:00', 805.2, 4, 1),
+    ('2024-10-22 10:40:00', 798.4, 4, 1),
+    ('2024-10-27 11:50:00', 815.6, 4, 1),
+
+    -- Exemplo para uso do Disco Usado (componente 5)
+    ('2024-10-08 06:20:00', 500.2, 5, 1),
+    ('2024-10-13 07:30:00', 490.1, 5, 1),
+    ('2024-10-18 08:35:00', 495.8, 5, 1),
+    ('2024-10-23 09:40:00', 508.6, 5, 1),
+    ('2024-10-28 10:50:00', 504.3, 5, 1),
+    
+    -- Exemplo para Memória Usada (componente 8)
+    ('2024-10-09 05:20:00', 16.5, 8, 1),
+    ('2024-10-14 06:30:00', 15.8, 8, 1),
+    ('2024-10-19 07:35:00', 17.2, 8, 1),
+    ('2024-10-24 08:40:00', 16.1, 8, 1),
+    ('2024-10-29 09:50:00', 17.0, 8, 1),
+    
+    -- NOVEMBRO 
+    
+    ('2024-11-05 14:20:00', 102.5, 1, 1),
+    ('2024-11-10 15:30:00', 97.3, 1, 1),
+    ('2024-11-15 10:25:00', 110.2, 1, 1),
+    ('2024-11-20 08:45:00', 95.8, 1, 1),
+    ('2024-11-25 17:55:00', 101.7, 1, 1),
+    
+    ('2024-11-05 11:15:00', 210.5, 2, 1),
+    ('2024-11-10 12:30:00', 205.7, 2, 1),
+    ('2024-11-15 13:35:00', 220.9, 2, 1),
+    ('2024-11-20 14:40:00', 215.4, 2, 1),
+    ('2024-11-25 16:50:00', 219.6, 2, 1),
+
+    -- Exemplo para uso da CPU (componente 3)
+    ('2024-11-06 09:20:00', 40.5, 3, 1),
+    ('2024-11-11 10:30:00', 42.7, 3, 1),
+    ('2024-11-16 11:35:00', 38.6, 3, 1),
+    ('2024-11-21 12:40:00', 45.3, 3, 1),
+    ('2024-11-26 13:50:00', 39.9, 3, 1),
+
+    -- Exemplo para uso do Disco Total (componente 4)
+    ('2024-11-07 07:20:00', 800.5, 4, 1),
+    ('2024-11-12 08:30:00', 810.3, 4, 1),
+    ('2024-11-17 09:35:00', 805.2, 4, 1),
+    ('2024-11-22 10:40:00', 798.4, 4, 1),
+    ('2024-11-27 11:50:00', 815.6, 4, 1),
+
+    -- Exemplo para uso do Disco Usado (componente 5)
+    ('2024-11-08 06:20:00', 500.2, 5, 1),
+    ('2024-11-13 07:30:00', 490.1, 5, 1),
+    ('2024-11-18 08:35:00', 495.8, 5, 1),
+    ('2024-11-23 09:40:00', 508.6, 5, 1),
+    ('2024-11-28 10:50:00', 504.3, 5, 1),
+    
+    -- Exemplo para Memória Usada (componente 8)
+    ('2024-11-09 05:20:00', 16.5, 8, 1),
+    ('2024-11-14 06:30:00', 15.8, 8, 1),
+    ('2024-11-19 07:35:00', 17.2, 8, 1),
+    ('2024-11-24 08:40:00', 16.1, 8, 1),
+    ('2024-11-29 09:50:00', 17.0, 8, 1);
+    
+    
+    
+select * from funcionario;    
 
 -- Tabela Alertas para registrar alertas associados às capturas
 CREATE TABLE IF NOT EXISTS Alertas (
@@ -267,31 +643,50 @@ CREATE TABLE IF NOT EXISTS Alertas (
     FOREIGN KEY (fkCaptura) REFERENCES Capturas(idCaptura)
 );
  
- select * from funcionario;
- alter table Funcionario add constraint ligacao foreign key (fkEmpresa) references Empresa(idEmpresa);
+alter table Funcionario add constraint ligacao foreign key (fkEmpresa) references Empresa(idEmpresa);
 
  CREATE
 DEFINER=CURRENT_USER SQL SECURITY INVOKER
 VIEW VizFunc AS
-SELECT idFuncionario,nome,sobrenome,email,fkEmpresa,estado FROM Funcionario;
+SELECT idFuncionario,nome,sobrenome,email,fkEmpresa,permissao,estado FROM Funcionario;
 
-select * from VizFunc;
-
-select idFuncionario, nome, email, permissao, fkEmpresa from Funcionario where email = 'pedrohenrique@techsolutions.com' AND senha = '123456789';
 
  CREATE
 DEFINER=CURRENT_USER SQL SECURITY INVOKER
 VIEW VizEdit AS
-SELECT idFuncionario,nome,numeroTelefone, senha, permissao, estado FROM Funcionario;
 
-select*from VizEdit where idFuncionario=1;
+SELECT idFuncionario,nome,sobrenome,numeroTelefone,email,senha, permissao, estado FROM Funcionario;	
+	
+SELECT 
+    c.nome AS componente,
+    DATE_FORMAT(cp.data_hora, '%Y-%m') AS mes_ano,
+    AVG(cp.valor) AS media_valor
+FROM 
+    Capturas cp
+JOIN 
+    Componentes c ON cp.fkComponente = c.idComponente
+WHERE 
+c.nome IN ('Bytes Recebidos', 'Bytes Enviados', 'Uso do Disco Usado', 'Uso do Disco Total', 'Uso da CPU', 'Memória Usada')
+    AND cp.data_hora >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)GROUP BY 
+    c.nome, 
+    DATE_FORMAT(cp.data_hora, '%Y-%m')
+ORDER BY 
+    c.nome, mes_ano;
 
 
+SELECT
+    c.nome AS componente,
+	DATE_FORMAT(cp.data_hora, '%Y-%m') AS mes_ano,
+    AVG(cp.valor) AS media_valor
+FROM
+    Capturas cp
+JOIN
+    Componentes c ON cp.fkComponente = c.idComponente
+WHERE
+    c.nome IN ('Bytes Recebidos', 'Bytes Enviados', 'Uso do Disco Usado', 'Uso do Disco Total', 'Uso da CPU', 'Memória Usada')
+    AND cp.data_hora >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+GROUP BY
+      c.nome, 
+    DATE_FORMAT(cp.data_hora, '%Y-%m');
 
 
-insert into funcionario(nome,sobrenome,numeroTelefone,email,senha,permissao) values ('Pedro','Henrique',962752952,'pedrohenrique@techsolutions.com','123456789','Analista');
-
-SELECT * FROM funcionario;
-
-
-update funcionario set permissao = 'Gerente' where idFuncionario = 5;

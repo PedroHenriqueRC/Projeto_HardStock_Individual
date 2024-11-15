@@ -40,7 +40,8 @@ FROM
 JOIN 
     Componentes c ON cp.fkComponente = c.idComponente
 WHERE 
-    cp.data_hora >= DATE_SUB(CURDATE(), INTERVAL ${periodo} MONTH)
+    c.nome IN ('Bytes Recebidos', 'Bytes Enviados', 'Uso do Disco Usado', 'Uso do Disco Total', 'Uso da CPU', 'Memória Usada')
+    AND cp.data_hora >= DATE_SUB(CURDATE(), INTERVAL ${periodo} MONTH)
 GROUP BY 
     c.nome, 
     DATE_FORMAT(cp.data_hora, '%Y-%m')
