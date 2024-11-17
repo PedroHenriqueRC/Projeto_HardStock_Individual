@@ -37,4 +37,9 @@ router.get("/verificarStatus/:idFuncionario", function (req, res) {
     usuarioController.verificarStatus(req, res);
 });
 
+router.post("/enviarMensagem", function (req, res) {
+    usuarioController.enviarMensagem(req, res);
+});
+
+
 module.exports = router;

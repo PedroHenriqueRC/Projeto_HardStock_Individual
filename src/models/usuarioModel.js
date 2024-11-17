@@ -67,12 +67,21 @@ function verificarStatus(idFuncionario) {
     return database.executar(instrucaoSql);
 }
 
+function enviarMensagem(nome, email, Mensagem) {
+    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function enviarMensagem():", email, nome, Mensagem);
+
+    var instrucaoSql = `insert into mensagem (nome, email, mensagem) values ('${nome}', '${email}','${Mensagem}');`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
 
 module.exports = {
     cadastrarFuncionario,
     buscarFuncionario,
     listarFuncionario,
     verificarStatus,
+    enviarMensagem,
     autenticar,
     cadastrar,
     deletar,
