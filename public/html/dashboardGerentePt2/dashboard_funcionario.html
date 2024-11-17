@@ -135,6 +135,51 @@
       color: #d32f2f;
       cursor: pointer;
     }
+
+    
+    #btnIcone {
+      position: relative;
+      color: white;
+      font-size: 17px;
+      display: table;
+      width: 300px;
+      padding: 10px;
+    }
+
+    .theme-icon {
+      cursor: pointer;
+      font-size: 20px;
+      color: #fff;
+      transition: transform 0.3s ease;
+    }
+
+    .theme-icon:hover {
+      transform: scale(1.5);
+    }
+
+    .dark-mode {
+      background-color: #282c41;
+      color: #f0f0f0;
+    }
+
+    .dark-mode h1 {
+      color: white;
+    }
+    
+    .dark-mode #add a {
+      background-color: #ffffff;
+      color: rgb(31, 27, 70);
+    }
+
+    .dark-mode #tabelaAnalista-table {
+      background-color: #ffffff;
+      color: #191b27;
+    }
+
+    .dark-mode #tabelaAnalista {
+      background-color: #ffffff;
+    }
+
   </style>
 
 </head>
@@ -160,7 +205,6 @@
         <li>
           <p style="margin-bottom: 20px;">
             <span id="nome" class="navItem-nome">
-
             </span>
           </p>
         </li>
@@ -174,6 +218,12 @@
             <i class="fa-solid fa-user-plus"></i>
             <span class="navItem" style="color: #191b27;">Funcionário</span>
           </a></li>
+          <li>
+            <a id="btnIcone" onclick="toggleDarkMode()">
+              <i class="fa-solid fa-moon theme-icon" id="themeToggleIcon"></i>
+              <span class="navItem">Mudar Tema</span>
+            </a>
+          </li>
         <div class="sair">
           <li><a href="https://heathtech.atlassian.net/servicedesk/customer/portal/4" target="_blank">
               <i class="fa-solid fa-headset"></i>
@@ -218,6 +268,24 @@
 
 </html>
 <script>
+
+function toggleDarkMode() {
+    const body = document.body;
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+
+
+    body.classList.toggle('dark-mode');
+
+
+    if (body.classList.contains('dark-mode')) {
+      themeToggleIcon.classList.remove('fa-moon');
+      themeToggleIcon.classList.add('fa-sun');
+    } else {
+      themeToggleIcon.classList.remove('fa-sun');
+      themeToggleIcon.classList.add('fa-moon');
+    }
+  }
+
 
   var fkEmpresa = sessionStorage.EMPRESA_USUARIO;
 

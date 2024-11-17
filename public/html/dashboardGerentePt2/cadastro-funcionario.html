@@ -27,6 +27,10 @@
       padding-top: 20px;
     }
 
+    h1{
+      color: rgb(31, 27, 70);
+    }
+
     .campos {
       width: 100%;
       display: flex;
@@ -117,6 +121,34 @@
       font-size: 1.2em;
       color: #232739;
     }
+
+    
+    #btnIcone {
+      position: relative;
+      color: white;
+      font-size: 17px;
+      display: table;
+      width: 300px;
+      padding: 10px;
+    }
+
+    .theme-icon {
+      cursor: pointer;
+      font-size: 20px;
+      color: #fff;
+      transition: transform 0.3s ease;
+    }
+
+    .theme-icon:hover {
+      transform: scale(1.5);
+    }
+
+    .dark-mode {
+      background-color: #282c41;
+      color: #f0f0f0;
+    }
+
+
   </style>
 
 
@@ -154,6 +186,12 @@
             <i class="fa-solid fa-user-plus"></i>
             <span class="navItem">Funcionário</span>
           </a></li>
+          <li>
+            <a id="btnIcone" onclick="toggleDarkMode()">
+              <i class="fa-solid fa-moon theme-icon" id="themeToggleIcon"></i>
+              <span class="navItem">Mudar Tema</span>
+            </a>
+          </li>
         <div class="sair">
           <li><a href="https://heathtech.atlassian.net/servicedesk/customer/portal/4" target="_blank">
               <i class="fa-solid fa-headset"></i>
@@ -222,6 +260,24 @@
 
 <script>
 
+function toggleDarkMode() {
+    const body = document.body;
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+
+
+    body.classList.toggle('dark-mode');
+
+
+    if (body.classList.contains('dark-mode')) {
+      themeToggleIcon.classList.remove('fa-moon');
+      themeToggleIcon.classList.add('fa-sun');
+    } else {
+      themeToggleIcon.classList.remove('fa-sun');
+      themeToggleIcon.classList.add('fa-moon');
+    }
+  }
+
+
   function togglePassword() {
     const passwordInput = document.getElementById("inputSenha");
     const toggleIcon = document.getElementById("toggleIcon");
@@ -256,10 +312,7 @@
       window.location = "./dashboard_funcionario.html"
     }
   }
-  function carregarNome() {
-    let text = sessionStorage.NOME_USUARIO;
-    nome.innerHTML = "Olá, " + text;
-  }
+
 
   function salvar() {
     var nome = inputNome.value;
@@ -328,4 +381,15 @@
 
     }
   }
+
+  function carregarNome() {
+  const nomeSpan = document.getElementById("nome");
+  const nomeUsuario = sessionStorage.getItem("NOME_USUARIO") || "Usuário"; // fallback se NOME_USUARIO não estiver no sessionStorage
+
+  if (nomeSpan) {
+    nomeSpan.textContent = "Olá, " + nomeUsuario;
+  } else {
+    console.warn("Elemento com id 'nome' não foi encontrado.");
+  }
+}
 </script>
