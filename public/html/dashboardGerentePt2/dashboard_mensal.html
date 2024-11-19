@@ -11,21 +11,37 @@
   <title>Dashboard Mensal | HardStock</title>
 
   <style>
-    /* Enhanced Dropdown styling */
+    
+    .Alinhamento{
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .titulo{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1%;
+      margin-left: 11%;
+    }
+
     #selecTempo {
       position: absolute;
-      margin-left: 6%;
-      /* margin-top: 16%; */
-      color: rgb(35, 39, 57);
-      font-size: 1rem;
-      padding: 0.6% 1.4%;
-      border: none;
-      border-radius: 20px;
-      margin-top: 1.5%;
-      margin-bottom: -29%;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-left: 43%;
+    margin-top: 16%;
+    color: rgb(35, 39, 57);
+    font-size: 1rem;
+    padding: 0.6% 1.4%;
+    border: none;
+    border-radius: 20px;
+    margin-top: 4.5%;
+    margin-bottom: -29%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    -webkit-appearance: none;
     }
 
     #selecTempo:hover {
@@ -37,7 +53,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 90%;
+      width: 95%;
       max-width: 1200px;
       margin: 3% 1% 3% 7%;
       padding-left: 10px;
@@ -62,7 +78,7 @@
       flex-direction: row;
       width: 100%;
       margin-bottom: 10px;
-      margin: -2.5%;
+      margin: -0.5%;
     }
 
     /* Chart box styling with a more refined panel look */
@@ -233,17 +249,18 @@
   </nav>
   </div>
 
-  <select name="tempo" id="selecTempo" onchange="gerarGraficosMediasMensais()">
-    <option value="#" selected disabled>Selecione o Tempo</option>
-    <option value="1">1 mês</option>
-    <option value="3">3 meses</option>
-    <option value="6">6 meses</option>
-    <option value="12">12 meses</option>
-  </select>
-
-  <div class="graficos">
-    <div class="graficos1">
-      <div class="chart-container">
+  <div class="Alinhamento">
+    <select name="tempo" id="selecTempo" onchange="gerarGraficosMediasMensais()">
+      <option value="0" selected disabled>Selecione o Tempo</option>
+      <option value="1">1 mês</option>
+      <option value="3">3 meses</option>
+      <option value="6">6 meses</option>
+      <option value="12">12 meses</option>
+    </select>
+    <h2 class="titulo">Análise temporal dos Servidores</h2>
+    <div class="graficos">
+      <div class="graficos1">
+        <div class="chart-container">
         <b>Média Rede</b>
         <canvas id="chart_Rede"></canvas>
       </div>
@@ -268,7 +285,8 @@
       </div>
     </div>
   </div>
-
+</div>
+  
 </body>
 
 </html>

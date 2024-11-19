@@ -53,7 +53,7 @@ function editar(nome,sobrenome,telefone,email,senha,permissao,estado, idFunciona
 
 function deletar(idFuncionario) {
     console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n deletar():", idFuncionario);
-    var instrucaoSql = `update funcionario set estado = "Desativado" where idFuncionario = ${idFuncionario};`;
+    var instrucaoSql = `update funcionario set estado = "Inativo" where idFuncionario = ${idFuncionario};`;
     
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
