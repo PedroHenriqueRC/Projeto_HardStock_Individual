@@ -11,15 +11,14 @@
   <title>Dashboard Mensal | HardStock</title>
 
   <style>
-    
-    .Alinhamento{
+    .Alinhamento {
       width: 100%;
       max-width: 1200px;
       display: flex;
       flex-direction: column;
     }
 
-    .titulo{
+    .titulo {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -29,19 +28,20 @@
 
     #selecTempo {
       position: absolute;
-    margin-left: 43%;
-    margin-top: 16%;
-    color: rgb(35, 39, 57);
-    font-size: 1rem;
-    padding: 0.6% 1.4%;
-    border: none;
-    border-radius: 20px;
-    margin-top: 4.5%;
-    margin-bottom: -29%;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    -webkit-appearance: none;
+      margin-left: 43%;
+      color: rgb(35, 39, 57);
+      font-size: 1rem;
+      padding: 0.6% 1.4%;
+      border: none;
+      border-radius: 20px;
+      margin-top: 4.5%;
+      margin-bottom: -29%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
     }
 
     #selecTempo:hover {
@@ -59,16 +59,13 @@
       padding-left: 10px;
       padding: 20px;
       background-color: rgb(178, 186, 194);
-      /* background: linear-gradient(to bottom, #515a83, #232739, #191b27); */
       border-radius: 15px;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    /* Chart row styles */
     .graficos1 {
       display: flex;
       flex-direction: row;
-      /* justify-content: space-between; */
       width: 80%;
       margin-bottom: 10px;
     }
@@ -81,7 +78,6 @@
       margin: -0.5%;
     }
 
-    /* Chart box styling with a more refined panel look */
     .graficos2 .chart-container {
       width: 100%;
       max-width: 550px;
@@ -111,15 +107,13 @@
       transform: translateY(-2px);
     }
 
-    /* Chart titles with improved font style */
     .chart-container b {
       font-size: 1.1rem;
-      color: #4a5568;
+      color: #191b27;
       margin-bottom: 15px;
       font-weight: 600;
     }
 
-    /* Responsive design adjustments */
     @media (max-width: 768px) {
 
       .graficos1,
@@ -133,10 +127,6 @@
         width: 90%;
         margin-bottom: 20px;
       }
-    }
-
-    b {
-      margin-left: 9%;
     }
 
     canvas {
@@ -172,7 +162,7 @@
     .dark-mode header {
       background: #232739a4;
     }
-    
+
     .dark-mode #selecTempo {
       background-color: rgb(31, 27, 70);
       color: white;
@@ -186,6 +176,102 @@
       background: linear-gradient(to bottom, #4c547a, #232739, #191b27);
     }
 
+    .tooltip .tooltipRAM {
+      visibility: hidden;
+      width: 230px;
+      background-color: #191b27;
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+      border-radius: 6px;
+
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      /* Posiciona acima do elemento */
+      left: 50%;
+      transform: translateX(-50%);
+      /* Centraliza horizontalmente */
+
+      /* Evitar que a página role */
+      white-space: normal;
+      /* Quebra linhas se necessário */
+      overflow: hidden;
+      word-wrap: break-word;
+      /* Garante a quebra de palavras longas */
+    }
+
+    .tooltip .tooltipRAM::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      /* Triângulo abaixo do tooltip */
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 5px;
+      border-style: solid;
+      border-color: #191b27 transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltipRAM {
+      visibility: visible;
+    }
+
+    .tooltip .tooltipRAM[style*="overflow"]:hover {
+      overflow: visible;
+      /* Permite expandir enquanto o tooltip está visível */
+    }
+
+    /* Ajustes para manter o tooltip dentro da tela */
+    .tooltip .tooltipRAM {
+      max-width: 300px;
+      word-break: normal;
+      display: block;
+      text-align: mid;
+    }
+
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 230px;
+      background-color: #191b27;
+      color: #fff;
+      text-align: center;
+      padding: 5px;
+      border-radius: 6px;
+
+      position: absolute;
+      z-index: 1;
+    }
+
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+    }
+
+    .info-icon {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 20px;
+      height: 20px;
+      margin-left: 5px;
+      font-size: 14px;
+      font-weight: bold;
+      color: white;
+      background-color: #191b27;
+      border-radius: 50%;
+      cursor: pointer;
+      text-align: center;
+      line-height: 20px;
+    }
+
+    .info-icon:hover {
+      background-color: #424868;
+    }
   </style>
 
 </head>
@@ -261,32 +347,88 @@
     <div class="graficos">
       <div class="graficos1">
         <div class="chart-container">
-        <b>Média Rede</b>
-        <canvas id="chart_Rede"></canvas>
+          <b>Média Rede</b>
+          <div class="tooltip">
+            <div class="info-icon">
+              ℹ
+            </div>
+
+            <span class="tooltiptext"> Média de Upload e Download:<br>
+              Gráfico com duas linhas que mostram as médias mensais de dados enviados (upload) e recebidos (download)
+              em MB. <br><br>
+              Ajuda a monitorar o uso da rede e detectar variações no tráfego.
+            </span>
+          </div>
+          <canvas id="chart_Rede"></canvas>
+        </div>
+
+        <div class="chart-container">
+          <b>Média Uso Disco</b>
+          <div class="tooltip">
+            <div class="info-icon">
+              ℹ
+            </div>
+
+            <span class="tooltiptext">Média de Uso do Disco: <br>
+              Exibe a média mensal do espaço de armazenamento efetivamente utilizado (em GB). <br><br>
+              Ajuda a entender como o espaço em disco está sendo consumido.
+            </span>
+          </div>
+
+          <canvas id="chart_Uso_do Disco Usado"></canvas>
+        </div>
       </div>
 
-      <div class="chart-container">
-        <b>Média Uso Disco Usado</b>
-        <canvas id="chart_Uso_do Disco Usado"></canvas>
-      </div>
-    </div>
-    <div class="graficos2">
-      <div class="chart-container">
-        <b>Média Armazenamento</b>
-        <canvas id="chart_Uso_do Disco Total"></canvas>
-      </div>
-      <div class="chart-container">
-        <b>Média Uso CPU</b>
-        <canvas id="chart_Uso_da CPU"></canvas>
-      </div>
-      <div class="chart-container">
-        <b>Média RAM</b>
-        <canvas id="chart_Memória_Usada"></canvas>
+      <div class="graficos2">
+        <div class="chart-container">
+          <b>Média Armazenamento</b>
+          <div class="tooltip">
+            <div class="info-icon">
+              ℹ
+            </div>
+
+            <span class="tooltiptext">Média Uso do Disco Total: <br>
+              Mostra a capacidade total de armazenamento disponível (em GB) em média ao longo de cada mês. <br><br>
+              Indica o espaço geral disponível no sistema.
+            </span>
+          </div>
+          <canvas id="chart_Uso_do Disco Total"></canvas>
+        </div>
+        <div class="chart-container">
+          <b>Média Uso CPU</b>
+          <div class="tooltip">
+            <div class="info-icon">
+              ℹ
+            </div>
+
+            <span class="tooltiptext">Média de Uso da CPU: <br>
+              Gráfico que exibe a média mensal do uso do processador, indicando o percentual de utilização ao longo do
+              tempo. <br><br>
+              Útil para identificar padrões de carga e possíveis sobrecargas.
+            </span>
+          </div>
+          <canvas id="chart_Uso_da CPU"></canvas>
+        </div>
+
+        <div class="chart-container">
+          <b>Média RAM</b>
+          <div class="tooltip">
+            <div class="info-icon">
+              ℹ
+            </div>
+
+            <span class="tooltipRAM">Média de Memória Usada: <br>
+              Representa a média mensal de memória utilizada (em GB). <br><br>
+              Permite acompanhar o consumo de memória e identificar tendências ou necessidades de ajuste no sistema.
+            </span>
+          </div>
+          <canvas id="chart_Memória_Usada"></canvas>
+        </div>
+
       </div>
     </div>
   </div>
-</div>
-  
+
 </body>
 
 </html>
@@ -464,18 +606,18 @@
   window.onload = iniciarAtualizacaoGraficos;
 
   function carregarNome() {
-  const nomeSpan = document.getElementById("nome");
-  const nomeUsuario = sessionStorage.getItem("NOME_USUARIO") || "Usuário"; // fallback se NOME_USUARIO não estiver no sessionStorage
+    const nomeSpan = document.getElementById("nome");
+    const nomeUsuario = sessionStorage.getItem("NOME_USUARIO") || "Usuário";
 
-  if (nomeSpan) {
-    nomeSpan.textContent = "Olá, " + nomeUsuario;
-  } else {
-    console.warn("Elemento com id 'nome' não foi encontrado.");
+    if (nomeSpan) {
+      nomeSpan.textContent = "Olá, " + nomeUsuario;
+    } else {
+      console.warn("Elemento com id 'nome' não foi encontrado.");
+    }
   }
-}
 
-document.addEventListener("DOMContentLoaded", function () {
-  carregarNome();
-});
+  document.addEventListener("DOMContentLoaded", function () {
+    carregarNome();
+  });
 
 </script>
