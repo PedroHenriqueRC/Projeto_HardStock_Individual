@@ -33,7 +33,7 @@ function buscarMediasMensais(periodo) {
 
     var instrucaoSql = `SELECT 
     c.nome AS componente,
-    DATE_FORMAT(cp.data_hora, '%Y-%m') AS mes_ano,
+    DATE_FORMAT(cp.dataHora, '%Y-%m') AS mes_ano,
     AVG(cp.valor) AS media_valor
 FROM 
     Capturas cp
@@ -41,10 +41,10 @@ JOIN
     Componentes c ON cp.fkComponente = c.idComponente
 WHERE 
     c.nome IN ('Bytes Recebidos', 'Bytes Enviados', 'Uso do Disco Usado', 'Uso do Disco Total', 'Uso da CPU', 'Memória Usada')
-    AND cp.data_hora >= DATE_SUB(CURDATE(), INTERVAL ${periodo} MONTH)
+    AND cp.dataHora >= DATE_SUB(CURDATE(), INTERVAL ${periodo} MONTH)
 GROUP BY 
     c.nome, 
-    DATE_FORMAT(cp.data_hora, '%Y-%m')
+    DATE_FORMAT(cp.dataHora, '%Y-%m')
 ORDER BY 
     c.nome, mes_ano;
 `;

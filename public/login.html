@@ -137,12 +137,12 @@
                     setTimeout(function () {
                         window.location = "../html/dashboardGerentePt2/dashboard_mensal.html";
                     }, 1000);
-                   } else if (permissao == 'Analista'){
+                   } else if (permissao == 'Analista' && status == 'Ativo'){
                     setTimeout(function () {
                         window.location = "../html/dashboardAnalista/dashboard_tempoAnalista.html   ";
                     }, 1000); 
-                   } else if(status == 'Desativado'){
-                    alert("Não foi possível fazer login, sua conta foi desativada!")
+                   } else if(status == 'Inativo'){
+                    alert("Não foi possível fazer login, sua conta foi Inativada!")
                    }else {
                     alert("Houve um erro ao tentar realizar o login!");
                    }

@@ -57,7 +57,9 @@ insert into servidor(nome,rede,ram,disco,cpu_,fkEmpresa) values ("Servidor 11° 
 CREATE TABLE IF NOT EXISTS Componentes (
     idComponente INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL, -- Nome do componente (e.g., CPU Uso, Memória RAM)
-    unidadeMedida VARCHAR(20) NOT NULL -- Unidade de medida (e.g., %, GB)
+    unidadeMedida VARCHAR(20) NOT NULL, -- Unidade de medida (e.g., %, GB)
+    fkEmpresa INT,
+    FOREIGN KEY (fkEmpresa) REFERENCES Empresa(idEmpresa)
 );
 
 INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Bytes Enviados', 'MB');
@@ -76,7 +78,9 @@ CREATE TABLE IF NOT EXISTS Capturas (
     data_hora DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data e hora da captura
     valor FLOAT NOT NULL, -- Valor capturado (e.g., 75.5)
     fkComponente INT, -- Referência ao componente capturado
-    fkServidor INT, -- Referência ao servidor
+    fkServidor INT, -- Referência ao servidor,
+    fkEmpresa INT,
+    FOREIGN KEY (fkEmpresa) REFERENCES Empresa(idEmpresa),
     FOREIGN KEY (fkComponente) REFERENCES Componentes(idComponente),
     FOREIGN KEY (fkServidor) REFERENCES Servidor(idServidor)
 );
@@ -84,6 +88,40 @@ CREATE TABLE IF NOT EXISTS Capturas (
 ALTER TABLE Capturas
 MODIFY COLUMN data_hora DATETIME NOT NULL;
 
+/*
+-- Criando a stored procedure para inserir dados
+DELIMITER $$
+
+CREATE PROCEDURE InserirDadosCapturas()
+BEGIN
+    DECLARE data_inicial DATE DEFAULT '2023-01-01';
+    DECLARE data_final DATE DEFAULT '2023-12-31';
+
+    WHILE data_inicial <= data_final DO
+        -- Loop para cada componente
+        INSERT INTO Capturas (data_hora, valor, fkComponente, fkServidor)
+        SELECT 
+            DATE_ADD(data_inicial, INTERVAL RAND() * 86400 SECOND), -- Hora aleatória no dia
+            ROUND(RAND() * 100 + 50, 2) AS valor, -- Valor aleatório entre 50 e 150
+            idComponente, 
+            Servidor.idServidor
+        FROM 
+            Componentes
+        CROSS JOIN
+            (SELECT idServidor FROM Servidor LIMIT 1) AS Servidor; -- Ajuste com base nos servidores disponíveis
+
+        -- Incrementa a data para o próximo dia
+        SET data_inicial = DATE_ADD(data_inicial, INTERVAL 1 DAY);
+    END WHILE;
+END $$
+
+DELIMITER ;
+
+-- Executando a stored procedure para inserir os dados
+CALL InserirDadosCapturas();
+*/
+
+select * from capturas;
 
 -- Exemplo de inserts para a tabela Capturas
 INSERT INTO Capturas (data_hora, valor, fkComponente, fkServidor)
@@ -640,8 +678,19 @@ CREATE TABLE IF NOT EXISTS Alertas (
     gravidade ENUM('baixo', 'médio', 'alto', 'critico'),
     descricao VARCHAR(256),
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fkEmpresa INT,
+    FOREIGN KEY (fkEmpresa) REFERENCES Empresa(idEmpresa),
     FOREIGN KEY (fkCaptura) REFERENCES Capturas(idCaptura)
 );
+ 
+CREATE TABLE IF NOT EXISTS mensagem (
+idMensagem int primary key auto_increment,
+nome varchar(128) not null,
+email varchar(256), 
+mensagem varchar(512)
+);
+
+select * from mensagem;
  
 alter table Funcionario add constraint ligacao foreign key (fkEmpresa) references Empresa(idEmpresa);
 
@@ -688,5 +737,6 @@ WHERE
 GROUP BY
       c.nome, 
     DATE_FORMAT(cp.data_hora, '%Y-%m');
-
+    
+    select * from mensagem;
 
