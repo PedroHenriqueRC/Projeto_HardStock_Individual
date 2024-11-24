@@ -4,40 +4,26 @@ CREATE DATABASE IF NOT EXISTS HardStock;
 -- Usando a base de dados criada
 USE HardStock;
 
--- Tabela Funcionario para armazenar dados dos funcionários
 CREATE TABLE IF NOT EXISTS Funcionario (
     idFuncionario INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50),
     sobrenome VARCHAR(100),
     numeroTelefone char(16),
     email VARCHAR(256),
-    senha VARCHAR(256),	
+    senha VARCHAR(256),
     permissao VARCHAR(45),
     fkEmpresa INT,
     estado varchar(45) default "Ativo"
-  );
-
--- Inserindo um registro na tabela Funcionario
-INSERT INTO Funcionario (nome, sobrenome, numeroTelefone, email, senha, permissao,fkEmpresa)
-VALUES ('João', 'Silva', '(11) 91234-5678', 'joao.silva@empresa.com', 'senhaSegura123', 'Analista',1);
-
-INSERT INTO Funcionario (nome, sobrenome, numeroTelefone, email, senha, permissao)
-VALUES ('Pedro', 'Henrique', '(11) 96275-2952', 'pedrohenrique@techsolutions.com', '123456789', 'Gerente',1);
-
-select *from empresa;
+);
 
 -- Tabela Empresa para armazenar informações da empresa
 CREATE TABLE IF NOT EXISTS Empresa (
     idEmpresa INT AUTO_INCREMENT PRIMARY KEY,
     razaoSocial VARCHAR(256),
     cnpj CHAR(20),
-	estado varchar(45) default "Ativo",
-    emailCorporativo VARCHAR(256)
+    emailCorporativo VARCHAR(256),
+    estado VARCHAR(45) DEFAULT 'Ativo'
 );
-select * from Empresa;
--- Inserindo um registro na tabela Empresa, relacionando com Funcionario
-INSERT INTO Empresa (razaoSocial, cnpj, emailCorporativo)
-VALUES ('Tech Solutions Ltda', '00.123.456/0001-23', 'contato@techsolutions.com');
 
 -- Tabela Especificacoes para armazenar detalhes técnicos de servidores
 CREATE TABLE IF NOT EXISTS Servidor (
@@ -46,14 +32,13 @@ CREATE TABLE IF NOT EXISTS Servidor (
     rede VARCHAR(50),
     ram VARCHAR(20),
     disco VARCHAR(20),
-    cpu_ VARCHAR(20),
+    `cpu` VARCHAR(20),
     fkEmpresa INT,
+    estado varchar(45) default "Ativo",
     FOREIGN KEY (fkEmpresa) REFERENCES Empresa(idEmpresa)
 );
 
-insert into servidor(nome,rede,ram,disco,cpu_,fkEmpresa) values ("Servidor 11° andar", "LAN","4GB","256GB","4 Núcleos",1);
 
--- Tabela Componentes para definir o tipo de componente e unidade de medida
 CREATE TABLE IF NOT EXISTS Componentes (
     idComponente INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL, -- Nome do componente (e.g., CPU Uso, Memória RAM)
@@ -62,20 +47,23 @@ CREATE TABLE IF NOT EXISTS Componentes (
     FOREIGN KEY (fkEmpresa) REFERENCES Empresa(idEmpresa)
 );
 
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Bytes Enviados', 'MB');
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Bytes Recebidos', 'MB');
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Uso da CPU', '%');
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Uso do Disco Total', 'GB');
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Uso do Disco Usado', 'GB');
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Tempo de Leitura do Disco', 'ms');
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Memória Total', 'GB');
-INSERT INTO Componentes (nome, unidadeMedida) VALUES ('Memória Usada', 'GB');
+CREATE TABLE IF NOT EXISTS mensagem (
+    idMensagem INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(128) not null,
+    email VARCHAR(256) not null, 
+    mensagem VARCHAR(512)
+);
 
+  CREATE TABLE site (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    btnNome VARCHAR(255) NOT NULL, 
+    dataHora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    tipoMobDes VARCHAR(50)
+);
 
--- Tabela Capturas para armazenar os valores capturados de componentes
 CREATE TABLE IF NOT EXISTS Capturas (
     idCaptura INT AUTO_INCREMENT PRIMARY KEY,
-    data_hora DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data e hora da captura
+    dataHora DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Data e hora da captura
     valor FLOAT NOT NULL, -- Valor capturado (e.g., 75.5)
     fkComponente INT, -- Referência ao componente capturado
     fkServidor INT, -- Referência ao servidor,
@@ -86,45 +74,193 @@ CREATE TABLE IF NOT EXISTS Capturas (
 );
 
 ALTER TABLE Capturas
-MODIFY COLUMN data_hora DATETIME NOT NULL;
+MODIFY COLUMN dataHora DATETIME NOT NULL;
 
-/*
--- Criando a stored procedure para inserir dados
-DELIMITER $$
+-- Tabela Alertas para registrar alertas associados às capturas
+CREATE TABLE IF NOT EXISTS Alertas (
+    idAlerta INT AUTO_INCREMENT PRIMARY KEY,
+    nomeAlerta varchar (250),
+    alerta INT,
+    parametro ENUM('normal', 'alerta', 'critico', 'severo'),
+    componente ENUM('rede', 'ram', 'disco', 'cpu'),
+    dataCriacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fkServidor INT,
+    FOREIGN KEY (fkServidor) REFERENCES Servidor(idServidor)
+);
+ 
+ alter table Funcionario add constraint ligacao foreign key (fkEmpresa) references Empresa(idEmpresa);
 
-CREATE PROCEDURE InserirDadosCapturas()
-BEGIN
-    DECLARE data_inicial DATE DEFAULT '2023-01-01';
-    DECLARE data_final DATE DEFAULT '2023-12-31';
+CREATE
+DEFINER=CURRENT_USER SQL SECURITY INVOKER
+VIEW VizFunc AS
+SELECT idFuncionario,nome,sobrenome,email,fkEmpresa,permissao,estado FROM Funcionario;
 
-    WHILE data_inicial <= data_final DO
-        -- Loop para cada componente
-        INSERT INTO Capturas (data_hora, valor, fkComponente, fkServidor)
-        SELECT 
-            DATE_ADD(data_inicial, INTERVAL RAND() * 86400 SECOND), -- Hora aleatória no dia
-            ROUND(RAND() * 100 + 50, 2) AS valor, -- Valor aleatório entre 50 e 150
-            idComponente, 
-            Servidor.idServidor
-        FROM 
-            Componentes
-        CROSS JOIN
-            (SELECT idServidor FROM Servidor LIMIT 1) AS Servidor; -- Ajuste com base nos servidores disponíveis
+ CREATE
+DEFINER=CURRENT_USER SQL SECURITY INVOKER
+VIEW VizEdit AS
+SELECT idFuncionario,nome,sobrenome,numeroTelefone,email,senha, permissao, estado FROM Funcionario; 
 
-        -- Incrementa a data para o próximo dia
-        SET data_inicial = DATE_ADD(data_inicial, INTERVAL 1 DAY);
-    END WHILE;
-END $$
+CREATE OR REPLACE VIEW capturasCpu AS
+SELECT Capturas.valor
+FROM Capturas
+WHERE Capturas.fkComponente = 3 AND Capturas.fkServidor = 1 limit 1;
 
-DELIMITER ;
+CREATE OR REPLACE VIEW capturasRam AS
+SELECT Capturas.valor
+FROM Capturas
+WHERE Capturas.fkComponente = 14 AND Capturas.fkServidor = 1 limit 1;
 
--- Executando a stored procedure para inserir os dados
-CALL InserirDadosCapturas();
-*/
+ CREATE OR REPLACE VIEW capturasRede AS
+SELECT Capturas.valor
+FROM Capturas
+WHERE Capturas.fkComponente = 1 AND Capturas.fkServidor = 1 limit 1;
 
-select * from capturas;
+
+CREATE OR REPLACE VIEW dadosGraficoCpu AS
+SELECT 
+    c1.dataHora,
+    c1.valor AS usoCpu,
+    c2.valor AS velocidadeCpu,
+    c1.fkServidor
+FROM Capturas c1
+JOIN Capturas c2 ON c1.fkServidor = c2.fkServidor AND c2.fkComponente = 
+(SELECT idComponente FROM Componentes WHERE nome = 'Velocidade da CPU')
+WHERE c1.fkComponente = (SELECT idComponente FROM Componentes WHERE nome = 'Uso da CPU') ORDER BY c1.dataHora;
+
+CREATE OR REPLACE VIEW dadosGraficoRede AS
+SELECT 
+    c1.dataHora,
+    c1.valor AS bytesEnviados,
+    c2.valor AS bytesRecebidos,
+    c1.fkServidor
+FROM Capturas c1
+JOIN Capturas c2 ON c1.fkServidor = c2.fkServidor 
+    AND c1.dataHora = c2.dataHora
+WHERE c1.fkComponente = (SELECT idComponente FROM Componentes WHERE nome = 'Bytes Enviados')
+  AND c2.fkComponente = (SELECT idComponente FROM Componentes WHERE nome = 'Bytes Recebidos')
+ORDER BY c1.dataHora;
+
+CREATE OR REPLACE VIEW dadosGraficoDisco AS
+SELECT 
+    c1.dataHora,
+    ROUND(c1.valor) AS usoDiscoTotal, 
+    ROUND(c2.valor) AS usoDiscoUsado,  
+    c1.fkServidor
+FROM Capturas c1
+JOIN Capturas c2 ON c1.fkServidor = c2.fkServidor 
+    AND c1.dataHora = c2.dataHora
+WHERE c1.fkComponente = (SELECT idComponente FROM Componentes WHERE nome = 'Uso do Disco Total')
+  AND c2.fkComponente = (SELECT idComponente FROM Componentes WHERE nome = 'Uso do Disco Usado')
+ORDER BY c1.dataHora;
+
+CREATE OR REPLACE VIEW dadosGraficoRam AS
+SELECT 
+    c1.dataHora,
+    c1.valor AS porcMemoriaUsada,
+    c2.valor AS numProcessos,
+    c1.fkServidor
+FROM Capturas c1
+JOIN Capturas c2 ON c1.fkServidor = c2.fkServidor 
+    AND c1.dataHora = c2.dataHora
+WHERE c1.fkComponente = (SELECT idComponente FROM Componentes WHERE nome = 'Porcentagem de Memória Usada')
+  AND c2.fkComponente = (SELECT idComponente FROM Componentes WHERE nome = 'Número de Processos')
+ORDER BY c1.dataHora;
+
+CREATE OR REPLACE VIEW selectAlerta AS
+SELECT 
+    idAlerta,
+    nomeAlerta,
+    parametro
+FROM 
+    Alertas;
+    
+INSERT INTO Componentes (nome, unidadeMedida) VALUES 
+('Bytes Enviados', 'MB'),
+('Bytes Recebidos', 'MB'),
+('Uso da CPU', '%'),
+('Uso do Disco Total', 'GB'),
+('Uso do Disco Usado', 'GB'),
+('Tempo de Leitura do Disco', 'ms'),
+('Memória Total', 'GB'),
+('Memória Usada', 'GB'),
+('Velocidade da CPU', 'MHz'),
+('Porcentagem de Memória Usada', '%'),
+('Número de Threads', 'Num');
+
+-- Inserindo um registro na tabela Empresa
+INSERT INTO Empresa (razaoSocial, cnpj, emailCorporativo) VALUES 
+('HardStock', '00.623.904/0001-73', 'contato.hardstock@hardstock.com'),
+('B3', '00.623.904/0001-71', 'contato.b3@b3.com');
+
+-- Inserindo um registro na tabela Funcionario
+INSERT INTO Funcionario (nome, sobrenome, numeroTelefone, email, senha, permissao,fkEmpresa) VALUES 
+('Felipe', 'Amorim', '(11) 91234-5678', 'felipe.amorim@hardstock.com', '123456789', 'Hardstock',1),
+('Felipe', 'Amorim', '(11) 91234-5678', 'felipe@hardstock.com', '123456789', 'Gerente',1),
+('Pedro', 'Souza', '(11) 91234-6789', 'pedro.sozua@b3.com', '123456789', 'Gerente',2),
+('Pedro', 'Henrique', '(11) 91234-1234', 'pedro.henrique@b3.com', '123456789', 'Gerente',2),
+('Eli', 'Rufino', '(11) 91234-4321', 'eli.rufino@b3.com', '123456789', 'Analista',2);
+
+-- Inserindo um registro na tabela Servidor
+insert into servidor(nome,rede,ram,disco,cpu,fkEmpresa) values ("Servidor 11° andar", "LAN","4GB","256GB","4 Núcleos",1);
+
+INSERT INTO mensagem (nome, email, mensagem) VALUES
+('Maria Silva', 'maria.silva@example.com', 'Gostaria de saber mais sobre os serviços oferecidos.'),
+('João Santos', 'joao.santos@example.com', 'Qual o horário de atendimento da empresa?'),
+('Ana Costa', 'ana.costa@example.com', 'Preciso de suporte para acessar minha conta.'),
+('Carlos Almeida', 'carlos.almeida@example.com', 'Como faço para alterar meus dados cadastrais?'),
+('Mariana Oliveira', 'mariana.oliveira@example.com', 'Estou interessada nos produtos da empresa.'),
+('Pedro Souza', 'pedro.souza@example.com', 'Tenho uma dúvida sobre o funcionamento do sistema.'),
+('Fernanda Lima', 'fernanda.lima@example.com', 'Gostaria de um orçamento personalizado.'),
+('Lucas Pereira', 'lucas.pereira@example.com', 'Quais são as formas de pagamento disponíveis?'),
+('Bruna Torres', 'bruna.torres@example.com', 'Existe algum tipo de treinamento oferecido pela empresa?'),
+('Gabriel Martins', 'gabriel.martins@example.com', 'Estou enfrentando problemas com a plataforma.');
+
+INSERT INTO site (btnnome, datahora, tipomobdes) VALUES
+('home', '2024-11-12 08:45:00', 'desktop'),    -- Domingo
+('solucao', '2024-11-13 10:30:00', 'desktop'), -- Segunda-feira
+('sobre', '2024-11-14 14:50:00', 'desktop'),   -- Terça-feira
+('mvv', '2024-11-15 09:15:00', 'desktop'),     -- Quarta-feira
+('contato', '2024-11-16 16:00:00', 'desktop'), -- Quinta-feira
+('login.html', '2024-11-17 19:05:00', 'desktop'), -- Sexta-feira
+('home', '2024-11-18 11:30:00', 'desktop'),    -- Sábado
+('home', '2024-11-12 08:45:00', 'desktop'),
+('solucao', '2024-11-13 10:30:00', 'desktop'),
+('sobre', '2024-11-14 14:50:00', 'desktop'),
+('mvv', '2024-11-15 09:15:00', 'desktop'),
+('contato', '2024-11-16 16:00:00', 'desktop'),
+('login.html', '2024-11-17 19:05:00', 'desktop'),
+('home', '2024-11-18 11:30:00', 'desktop'),
+('solucao', '2024-11-12 13:10:00', 'mobile'),
+('sobre', '2024-11-13 17:45:00', 'desktop'),
+('mvv', '2024-11-14 09:30:00', 'mobile'),
+('contato', '2024-11-15 20:05:00', 'desktop'),
+('login.html', '2024-11-16 07:50:00', 'mobile'),
+('home', '2024-11-17 18:20:00', 'desktop'),
+('solucao', '2024-11-18 10:40:00', 'mobile'),
+('sobre', '2024-11-12 15:00:00', 'desktop'),
+('mvv', '2024-11-13 12:30:00', 'desktop'),
+('contato', '2024-11-14 16:10:00', 'mobile'),
+('login.html', '2024-11-15 08:55:00', 'desktop'),
+('home', '2024-11-16 14:25:00', 'mobile'),
+('solucao', '2024-11-17 17:30:00', 'desktop'),
+('sobre', '2024-11-18 12:15:00', 'mobile'),
+('mvv', '2024-11-12 09:00:00', 'desktop'),
+('contato', '2024-11-13 18:05:00', 'desktop'),
+('login.html', '2024-11-14 11:20:00', 'mobile'),
+('home', '2024-11-15 14:45:00', 'desktop'),
+('solucao', '2024-11-16 10:10:00', 'mobile'),
+('sobre', '2024-11-17 13:40:00', 'desktop'),
+('mvv', '2024-11-18 09:50:00', 'desktop'),
+('contato', '2024-11-12 16:30:00', 'mobile'),
+('login.html', '2024-11-13 14:15:00', 'desktop'),
+('home', '2024-11-14 18:00:00', 'mobile'),
+('solucao', '2024-11-15 12:25:00', 'desktop'),
+('sobre', '2024-11-16 19:30:00', 'mobile'),
+('mvv', '2024-11-17 10:50:00', 'desktop'),
+('contato', '2024-11-18 15:00:00', 'desktop');
 
 -- Exemplo de inserts para a tabela Capturas
-INSERT INTO Capturas (data_hora, valor, fkComponente, fkServidor)
+INSERT INTO Capturas (dataHora, valor, fkComponente, fkServidor)
 VALUES 
     -- Novembro de 2023
     ('2023-11-05 14:20:00', 102.5, 1, 1),
@@ -166,8 +302,8 @@ VALUES
     ('2023-11-19 07:35:00', 17.2, 8, 1),
     ('2023-11-24 08:40:00', 16.1, 8, 1),
     ('2023-11-29 09:50:00', 17.0, 8, 1),
-
--- DEZEMBRO
+    
+    -- Dezembro
 	('2023-12-05 14:20:00', 102.5, 1, 1),
     ('2023-12-10 15:30:00', 97.3, 1, 1),
     ('2023-12-15 10:25:00', 110.2, 1, 1),
@@ -208,7 +344,7 @@ VALUES
     ('2023-12-24 08:40:00', 16.1, 8, 1),
     ('2023-12-29 09:50:00', 17.0, 8, 1),
     
-    -- JANEIRO
+    -- janeiro
 	('2024-01-05 14:20:00', 102.5, 1, 1),
     ('2024-01-10 15:30:00', 97.3, 1, 1),
     ('2024-01-15 10:25:00', 110.2, 1, 1),
@@ -249,8 +385,8 @@ VALUES
     ('2024-01-24 08:40:00', 16.1, 8, 1),
     ('2024-01-29 09:50:00', 17.0, 8, 1),
     
-    -- FEVEREIRO 
-	('2024-02-05 14:20:00', 102.5, 1, 1),
+    -- Fevereiro
+    ('2024-02-05 14:20:00', 102.5, 1, 1),
     ('2024-02-10 15:30:00', 97.3, 1, 1),
     ('2024-02-15 10:25:00', 110.2, 1, 1),
     ('2024-02-20 08:45:00', 95.8, 1, 1),
@@ -289,9 +425,6 @@ VALUES
     ('2024-02-19 07:35:00', 17.2, 8, 1),
     ('2024-02-24 08:40:00', 16.1, 8, 1),
     ('2024-02-29 09:50:00', 17.0, 8, 1),
-
--- MARÇO
-	
 	('2024-03-05 14:20:00', 102.5, 1, 1),
     ('2024-03-10 15:30:00', 97.3, 1, 1),
     ('2024-03-15 10:25:00', 110.2, 1, 1),
@@ -331,9 +464,6 @@ VALUES
     ('2024-03-19 07:35:00', 17.2, 8, 1),
     ('2024-03-24 08:40:00', 16.1, 8, 1),
     ('2024-03-29 09:50:00', 17.0, 8, 1),
-    
-    -- ABRIL
-    
 	('2024-04-05 14:20:00', 102.5, 1, 1),
     ('2024-04-10 15:30:00', 97.3, 1, 1),
     ('2024-04-15 10:25:00', 110.2, 1, 1),
@@ -373,10 +503,7 @@ VALUES
     ('2024-04-19 07:35:00', 17.2, 8, 1),
     ('2024-04-24 08:40:00', 16.1, 8, 1),
     ('2024-04-29 09:50:00', 17.0, 8, 1),
-    
-    -- MAIO
-    
-	('2024-05-05 14:20:00', 102.5, 1, 1),
+    ('2024-05-05 14:20:00', 102.5, 1, 1),
     ('2024-05-10 15:30:00', 97.3, 1, 1),
     ('2024-05-15 10:25:00', 110.2, 1, 1),
     ('2024-05-20 08:45:00', 95.8, 1, 1),
@@ -415,10 +542,7 @@ VALUES
     ('2024-05-19 07:35:00', 17.2, 8, 1),
     ('2024-05-24 08:40:00', 16.1, 8, 1),
     ('2024-05-29 09:50:00', 17.0, 8, 1),
-    
-    -- JUNHO
-    
-	('2024-06-05 14:20:00', 102.5, 1, 1),
+    ('2024-06-05 14:20:00', 102.5, 1, 1),
     ('2024-06-10 15:30:00', 97.3, 1, 1),
     ('2024-06-15 10:25:00', 110.2, 1, 1),
     ('2024-06-20 08:45:00', 95.8, 1, 1),
@@ -457,10 +581,7 @@ VALUES
     ('2024-06-19 07:35:00', 17.2, 8, 1),
     ('2024-06-24 08:40:00', 16.1, 8, 1),
     ('2024-06-29 09:50:00', 17.0, 8, 1),
-    
-    -- JULHO
-	
-	('2024-07-05 14:20:00', 102.5, 1, 1),
+    ('2024-07-05 14:20:00', 102.5, 1, 1),
     ('2024-07-10 15:30:00', 97.3, 1, 1),
     ('2024-07-15 10:25:00', 110.2, 1, 1),
     ('2024-07-20 08:45:00', 95.8, 1, 1),
@@ -499,10 +620,7 @@ VALUES
     ('2024-07-19 07:35:00', 17.2, 8, 1),
     ('2024-07-24 08:40:00', 16.1, 8, 1),
     ('2024-07-29 09:50:00', 17.0, 8, 1),
-
-	-- AGOSTO
-    
-	('2024-08-05 14:20:00', 102.5, 1, 1),
+    ('2024-08-05 14:20:00', 102.5, 1, 1),
     ('2024-08-10 15:30:00', 97.3, 1, 1),
     ('2024-08-15 10:25:00', 110.2, 1, 1),
     ('2024-08-20 08:45:00', 95.8, 1, 1),
@@ -540,10 +658,7 @@ VALUES
     ('2024-08-19 07:35:00', 17.2, 8, 1),
     ('2024-08-24 08:40:00', 16.1, 8, 1),
     ('2024-08-29 09:50:00', 17.0, 8, 1),
-    
-    -- SETEMBRO
-    
-	('2024-09-05 14:20:00', 102.5, 1, 1),
+    ('2024-09-05 14:20:00', 102.5, 1, 1),
     ('2024-09-10 15:30:00', 97.3, 1, 1),
     ('2024-09-15 10:25:00', 110.2, 1, 1),
     ('2024-09-20 08:45:00', 95.8, 1, 1),
@@ -582,10 +697,7 @@ VALUES
     ('2024-09-19 07:35:00', 17.2, 8, 1),
     ('2024-09-24 08:40:00', 16.1, 8, 1),
     ('2024-09-29 09:50:00', 17.0, 8, 1),
-    
-    -- OUTUBRO    
-    
-	('2024-10-05 14:20:00', 102.5, 1, 1),
+    ('2024-10-05 14:20:00', 102.5, 1, 1),
     ('2024-10-10 15:30:00', 97.3, 1, 1),
     ('2024-10-15 10:25:00', 110.2, 1, 1),
     ('2024-10-20 08:45:00', 95.8, 1, 1),
@@ -667,76 +779,48 @@ VALUES
     ('2024-11-24 08:40:00', 16.1, 8, 1),
     ('2024-11-29 09:50:00', 17.0, 8, 1);
     
+    select * from site;
+
+
+INSERT INTO Capturas (dataHora, valor, fkComponente, fkServidor)
+VALUES 
+    -- Uso da CPU (Componente 3)
+    ('2023-11-06 09:20:00', 40.5, 3, 1),
+    ('2023-11-11 10:30:00', 42.7, 3, 1),
+    ('2023-11-16 11:35:00', 38.6, 3, 1),
+    ('2023-11-21 12:40:00', 45.3, 3, 1),
+    ('2023-11-26 13:50:00', 39.9, 3, 1),
+
+    -- Memória Usada (Componente 8)
+    ('2023-11-09 05:20:00', 16.5, 8, 1),
+    ('2023-11-14 06:30:00', 15.8, 8, 1),
+    ('2023-11-19 07:35:00', 17.2, 8, 1),
+    ('2023-11-24 08:40:00', 16.1, 8, 1),
+    ('2023-11-29 09:50:00', 17.0, 8, 1);
     
     
-select * from funcionario;    
-
--- Tabela Alertas para registrar alertas associados às capturas
-CREATE TABLE IF NOT EXISTS Alertas (
-    idAlerta INT AUTO_INCREMENT PRIMARY KEY,
-    fkCaptura INT,
-    gravidade ENUM('baixo', 'médio', 'alto', 'critico'),
-    descricao VARCHAR(256),
-    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    fkEmpresa INT,
-    FOREIGN KEY (fkEmpresa) REFERENCES Empresa(idEmpresa),
-    FOREIGN KEY (fkCaptura) REFERENCES Capturas(idCaptura)
-);
- 
-CREATE TABLE IF NOT EXISTS mensagem (
-idMensagem int primary key auto_increment,
-nome varchar(128) not null,
-email varchar(256), 
-mensagem varchar(512)
-);
-
-select * from mensagem;
- 
-alter table Funcionario add constraint ligacao foreign key (fkEmpresa) references Empresa(idEmpresa);
-
- CREATE
-DEFINER=CURRENT_USER SQL SECURITY INVOKER
-VIEW VizFunc AS
-SELECT idFuncionario,nome,sobrenome,email,fkEmpresa,permissao,estado FROM Funcionario;
-
-
- CREATE
-DEFINER=CURRENT_USER SQL SECURITY INVOKER
-VIEW VizEdit AS
-
-SELECT idFuncionario,nome,sobrenome,numeroTelefone,email,senha, permissao, estado FROM Funcionario;	
-	
-SELECT 
-    c.nome AS componente,
-    DATE_FORMAT(cp.data_hora, '%Y-%m') AS mes_ano,
-    AVG(cp.valor) AS media_valor
-FROM 
-    Capturas cp
-JOIN 
-    Componentes c ON cp.fkComponente = c.idComponente
-WHERE 
-c.nome IN ('Bytes Recebidos', 'Bytes Enviados', 'Uso do Disco Usado', 'Uso do Disco Total', 'Uso da CPU', 'Memória Usada')
-    AND cp.data_hora >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)GROUP BY 
-    c.nome, 
-    DATE_FORMAT(cp.data_hora, '%Y-%m')
-ORDER BY 
-    c.nome, mes_ano;
-
-
-SELECT
-    c.nome AS componente,
-	DATE_FORMAT(cp.data_hora, '%Y-%m') AS mes_ano,
-    AVG(cp.valor) AS media_valor
-FROM
-    Capturas cp
-JOIN
-    Componentes c ON cp.fkComponente = c.idComponente
-WHERE
-    c.nome IN ('Bytes Recebidos', 'Bytes Enviados', 'Uso do Disco Usado', 'Uso do Disco Total', 'Uso da CPU', 'Memória Usada')
-    AND cp.data_hora >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
-GROUP BY
-      c.nome, 
-    DATE_FORMAT(cp.data_hora, '%Y-%m');
     
-    select * from mensagem;
+    
+    INSERT INTO Capturas (dataHora, valor, fkComponente, fkServidor)
+VALUES 
+    -- Uso da CPU (Componente 3)
+ ('2024-10-06 09:20:00', 40.5, 3, 1),
+    ('2024-10-10 10:30:00', 42.7, 3, 1),
+    ('2024-10-16 10:35:00', 38.6, 3, 1),
+    ('2024-10-21 12:40:00', 45.3, 3, 1),
+    ('2024-10-26 13:50:00', 39.9, 3, 1),
+
+    -- Memória Usada (Componente 8)
+    ('2024-10-09 05:20:00', 16.5, 8, 1),
+    ('2024-10-14 06:30:00', 15.8, 8, 1),
+    ('2024-10-19 07:35:00', 17.2, 8, 1),
+    ('2024-10-24 08:40:00', 16.1, 8, 1),
+    ('2024-10-29 09:50:00', 17.0, 8, 1);
+
+    
+    
+    
+    
+    
+    
 
